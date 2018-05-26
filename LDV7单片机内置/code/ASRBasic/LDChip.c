@@ -10,7 +10,7 @@
 **  修改日期：2013.9.13
 **  说明：口令模式： 即每次识别时都需要说“小杰”这个口令 ，才能够进行下一级的识别
 /***************************飞音云电子******************************/
-#include "config.h"
+#include "../config.h"
 
 extern void  delay(unsigned long uldata);
 
@@ -69,7 +69,7 @@ void LD_Init_Common()
 	delay(10);
 
 	LD_WriteReg(0xCD, 0x04);
-	//	LD_WriteReg(0x17, 0x4c); 
+	//	LD_WriteReg(0x17, 0x4c);
 	delay(5);
 	LD_WriteReg(0xB9, 0x00);
 	LD_WriteReg(0xCF, 0x4F);
@@ -275,32 +275,10 @@ uint8 LD_AsrAddFixed()
 {
 	uint8 k, flag;
 	uint8 nAsrAddLength;
-#define DATE_A 8   /*数组二维数值*/
-#define DATE_B 20		/*数组一维数值*/
-	uint8 code sRecog[DATE_A][DATE_B] = {
-		"xiao jie", \
-		"kai fa ban yan zheng", \
-		"dai ma ce shi", \
-		"kai deng", \
-		"guan deng", \
-		"bei jing", \
-		"shang hai", \
-		"guang zhou"
-	};	/*添加关键词，用户修改*/
-	uint8 code pCode[DATE_A] = {
-		CODE_CMD, \
-		CODE_KFBYZ, \
-		CODE_DMCS, \
-		CODE_KD, \
-		CODE_GD, \
-		CODE_BJ, \
-		CODE_SH, \
-		CODE_GZ
-	};	/*添加识别码，用户修改*/
-	flag = 1;
-	for (k = 0; k < DATE_A; k++)
-	{
 
+	flag = 1;
+	for (k = 0; k < DATE_ROW; k++)
+	{
 		if (LD_Check_ASRBusyFlag_b2() == 0)
 		{
 			flag = 0;
@@ -314,7 +292,7 @@ uint8 LD_AsrAddFixed()
 		LD_WriteReg(0x08, 0x00);
 		delay(1);
 
-		for (nAsrAddLength = 0; nAsrAddLength < DATE_B; nAsrAddLength++)
+		for (nAsrAddLength = 0; nAsrAddLength < DATE_CAL; nAsrAddLength++)
 		{
 			if (sRecog[k][nAsrAddLength] == 0)
 				break;
@@ -336,6 +314,3 @@ uint8 LD_GetResult()
 {
 	return LD_ReadReg(0xc5);
 }
-
-
-

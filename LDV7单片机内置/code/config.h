@@ -1,4 +1,3 @@
-
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
@@ -20,11 +19,14 @@ typedef unsigned       long int uint64_t;
 
 
 /****头文件包含*****/
-#include <intrins.h>
-#include "STC11XX.H"
-#include "LDChip.h"
-#include "Reg_RW.h"
 #include "usart.h"
+#include <intrins.h>
+#include "ASRBasic/STC11XX.H"
+#include "ASRBasic/LDChip.h"
+#include "ASRBasic/Reg_RW.h"
+
+#include "UserKeyword/CommonKeyword.h"
+#include "UserKeyword/CommonKeywordCode.h"
 
 /****条件编译定义*******/
 
