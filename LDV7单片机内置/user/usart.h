@@ -2,10 +2,8 @@
 #ifndef __USART_H
 #define __USART_H
 
-
-void UartIni(void);//´®¿Ú³õÊ¼»¯
-void UARTSendByte(uint8_t DAT);	//´®¿Ú·¢ËÍÒ»×Ö½ÚÊı¾İ
-void PrintCom(uint8_t *DAT); //´òÓ¡´®¿Ú×Ö·û´®Êı¾İ
-
+void UartIni(void);                                                         // ä¸²å£åˆå§‹åŒ–
+void UARTSendByte(uint8_t DAT);                                             // ä¸²å£å‘é€ä¸€å­—èŠ‚æ•°æ®
+void PrintCom(uint8_t *DAT);                                                // æ‰“å°ä¸²å£å­—ç¬¦ä¸²æ•°æ®
 
 #endif

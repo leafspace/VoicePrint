@@ -1,36 +1,36 @@
-/***************************·ÉÒôÔÆµç×Ó****************************
-**  ¹¤³ÌÃû³Æ£ºYS-V0.7ÓïÒôÊ¶±ğÄ£¿éÇı¶¯³ÌĞò
+/***************************é£éŸ³äº‘ç”µå­****************************
+**  å·¥ç¨‹åç§°ï¼šYS-V0.7è¯­éŸ³è¯†åˆ«æ¨¡å—é©±åŠ¨ç¨‹åº
 **	CPU: STC11L08XE
-**	¾§Õñ£º22.1184MHZ
-**	²¨ÌØÂÊ£º9600 bit/S
-**	ÅäÌ×²úÆ·ĞÅÏ¢£ºYS-V0.7ÓïÒôÊ¶±ğ¿ª·¢°å
+**	æ™¶æŒ¯ï¼š22.1184MHZ
+**	æ³¢ç‰¹ç‡ï¼š9600 bit/S
+**	é…å¥—äº§å“ä¿¡æ¯ï¼šYS-V0.7è¯­éŸ³è¯†åˆ«å¼€å‘æ¿
 **                http://yuesheng001.taobao.com
-**  ×÷Õß£ºzdings
-**  ÁªÏµ£º751956552@qq.com
-**  ĞŞ¸ÄÈÕÆÚ£º2013.9.13
-**  ËµÃ÷£º¿ÚÁîÄ£Ê½£º ¼´Ã¿´ÎÊ¶±ğÊ±¶¼ĞèÒªËµ¡°Ğ¡½Ü¡±Õâ¸ö¿ÚÁî £¬²ÅÄÜ¹»½øĞĞÏÂÒ»¼¶µÄÊ¶±ğ
-/***************************·ÉÒôÔÆµç×Ó******************************/
+**  ä½œè€…ï¼šzdings
+**  è”ç³»ï¼š751956552@qq.com
+**  ä¿®æ”¹æ—¥æœŸï¼š2013.9.13
+**  è¯´æ˜ï¼šå£ä»¤æ¨¡å¼ï¼š å³æ¯æ¬¡è¯†åˆ«æ—¶éƒ½éœ€è¦è¯´â€œå°æ°â€è¿™ä¸ªå£ä»¤ ï¼Œæ‰èƒ½å¤Ÿè¿›è¡Œä¸‹ä¸€çº§çš„è¯†åˆ«
+/***************************é£éŸ³äº‘ç”µå­******************************/
 #include "config.h"
 
-		#define LD_INDEX_PORT		(*((volatile unsigned char xdata*)(0x8100))) 
-		#define LD_DATA_PORT		(*((volatile unsigned char xdata*)(0x8000))) 
-		//ÆÀ¹À°åÉÏ MCUµÄA8 Á¬½Óµ½ LDĞ¾Æ¬µÄAD
-		//         MCUµÄA14 Á¬½Óµ½ LDĞ¾Æ¬µÄCSB
-		//         MCUµÄRD¡¢WR Á¬½Ó LDĞ¾Æ¬µÄRD¡¢WR (xdata ¶ÁĞ´Ê±×Ô¶¯²úÉúµÍĞÅºÅ)
-		//
-		//0x8100µÄ¶ş½øÖÆÊÇ10000001 00000000		CSB=0 AD=1
-		//                 ^     ^
-		//0x8000µÄ¶ş½øÖÆÊÇ10000000 00000000		CSB=0 AD=0
-		//                 ^     ^		
-		void LD_WriteReg( unsigned char address, unsigned char dataout )
-		{
-			LD_INDEX_PORT  = address;         
-			LD_DATA_PORT = dataout;          
-		}
-		
-		unsigned char LD_ReadReg( unsigned char address )
-		{
-			LD_INDEX_PORT = address;         
-			return (unsigned char)LD_DATA_PORT;     
-		}
+#define LD_INDEX_PORT		(*((volatile unsigned char xdata*)(0x8100))) 
+#define LD_DATA_PORT		(*((volatile unsigned char xdata*)(0x8000))) 
+//è¯„ä¼°æ¿ä¸Š MCUçš„A8 è¿æ¥åˆ° LDèŠ¯ç‰‡çš„AD
+//         MCUçš„A14 è¿æ¥åˆ° LDèŠ¯ç‰‡çš„CSB
+//         MCUçš„RDã€WR è¿æ¥ LDèŠ¯ç‰‡çš„RDã€WR (xdata è¯»å†™æ—¶è‡ªåŠ¨äº§ç”Ÿä½ä¿¡å·)
+//
+//0x8100çš„äºŒè¿›åˆ¶æ˜¯10000001 00000000		CSB=0 AD=1
+//                 ^     ^
+//0x8000çš„äºŒè¿›åˆ¶æ˜¯10000000 00000000		CSB=0 AD=0
+//                 ^     ^		
+void LD_WriteReg(unsigned char address, unsigned char dataout)
+{
+	LD_INDEX_PORT = address;
+	LD_DATA_PORT = dataout;
+}
+
+unsigned char LD_ReadReg(unsigned char address)
+{
+	LD_INDEX_PORT = address;
+	return (unsigned char)LD_DATA_PORT;
+}
 

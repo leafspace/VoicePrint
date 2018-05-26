@@ -1,17 +1,13 @@
-
-
 #ifndef REG_RW_H
 #define REG_RW_H
 
-//Çı¶¯¶Ë¿Ú¶¨Òå
-sbit LD_MODE	=P4^3; /*¶ÁĞ´Ä£Ê½Ñ¡Ôñ*/
-sbit RSTB=P3^5;	 /*¸´Î»¶Ë¿Ú*/
-sbit CSB=P2^1;	 /*Ä£¿éÆ¬Ñ¡¶Ë¿Ú*/
+// é©±åŠ¨ç«¯å£å®šä¹‰
+sbit LD_MODE = P4 ^ 3;                                                        /*è¯»å†™æ¨¡å¼é€‰æ‹©*/
+sbit RSTB = P3 ^ 5;	                                                        /*å¤ä½ç«¯å£*/
+sbit CSB = P2 ^ 1;                                                            /*æ¨¡å—ç‰‡é€‰ç«¯å£*/
 
-
-//º¯ÊıÉùÃ÷
-void LD_WriteReg( unsigned char address, unsigned char dataout );
-unsigned char LD_ReadReg( unsigned char address );
-
+// å‡½æ•°å£°æ˜
+void LD_WriteReg(unsigned char address, unsigned char dataout);
+unsigned char LD_ReadReg(unsigned char address);
 
 #endif

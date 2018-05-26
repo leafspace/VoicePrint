@@ -1,6 +1,6 @@
 #include "ComCommon.h"
 
-void set_speed(int fd, int speed) 
+void set_speed(int fd, int speed)
 {
 	int i;
 	int status;
