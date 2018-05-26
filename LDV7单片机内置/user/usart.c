@@ -76,3 +76,15 @@ void PrintCom(uint8_t *DAT)
 	}
 }
 
+/************************************************************************
+功能描述： 串口发送识别的字符串数据
+入口参数： 	code：识别的字符code
+返 回 值： none
+其他说明： API 供外部使用，直观！
+**************************************************************************/
+void PrintComReg(uint8 code)
+{
+	uint8_t buffer[0xff] = { 0 };
+	sprintf(buffer, "<LDV7 REG>%d</LDV7 REG>", code)
+	PrintCom(buffer);
+}

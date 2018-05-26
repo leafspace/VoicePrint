@@ -24,6 +24,7 @@ typedef unsigned       long int uint64_t;
 #include "ASRBasic/STC11XX.H"
 #include "ASRBasic/LDChip.h"
 #include "ASRBasic/Reg_RW.h"
+#include "ASRBasic/MainCommon.h"
 
 #include "UserKeyword/CommonKeyword.h"
 #include "UserKeyword/CommonKeywordCode.h"
