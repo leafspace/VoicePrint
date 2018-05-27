@@ -347,9 +347,9 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>SourceMain.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\code\main.c</FilePath>
+              <FilePath>..\code\SourceMain.c</FilePath>
             </File>
             <File>
               <FileName>LDChip.c</FileName>

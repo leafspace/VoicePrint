@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "ComCommon.h"
+#include "ComCommon/ComCommon.h"
 
 #define false   -1
 #define true    1

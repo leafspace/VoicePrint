@@ -165,8 +165,8 @@
       <TopLine>39</TopLine>
       <CurrentLine>59</CurrentLine>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\code\main.c</PathWithFileName>
-      <FilenameWithoutPath>main.c</FilenameWithoutPath>
+      <PathWithFileName>..\code\SourceMain.c</PathWithFileName>
+      <FilenameWithoutPath>SourceMain.c</FilenameWithoutPath>
     </File>
     <File>
       <GroupNumber>1</GroupNumber>
@@ -1581,7 +1581,7 @@
           <CurrentLine>12</CurrentLine>
         </Doc>
         <Doc>
-          <Name>..\code\main.c</Name>
+          <Name>..\code\SourceMain.c</Name>
           <ColumnNumber>0</ColumnNumber>
           <TopLine>39</TopLine>
           <CurrentLine>59</CurrentLine>
