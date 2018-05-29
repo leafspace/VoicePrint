@@ -1,4 +1,7 @@
-#pragram once
+#ifndef __MAINCOMMON_H
+#define __MAINCOMMON_H
+
+#include "../config.h"
 
 uint8_t G0_flag = DISABLE;                                                  // 运行标志，ENABLE:运行。DISABLE:禁止运行
 sbit LED = P4 ^ 2;                                                          // 信号指示灯
@@ -19,3 +22,5 @@ void delay(unsigned long uldata);
 void User_handle(uint8 dat);                                                // 用户执行操作函数
 void Led_test(void);                                                        // 单片机工作指示
 void Delay200ms();
+
+#endif

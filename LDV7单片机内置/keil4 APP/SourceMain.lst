@@ -1,0 +1,98 @@
+C51 COMPILER V9.00   SOURCEMAIN                                                            05/29/2018 18:06:27 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE SOURCEMAIN
+OBJECT MODULE PLACED IN ..\obj\SourceMain.obj
+COMPILER INVOKED BY: C:\NSProgram�\Keil\C51\BIN\C51.EXE ..\code\SourceMain.c LARGE BROWSE INCDIR(..\code;..\user) DEBUG 
+                    -OBJECTEXTEND PRINT(.\SourceMain.lst) OBJECT(..\obj\SourceMain.obj)
+
+line level    source
+
+   1          /***************************飞音云电子****************************
+   2          **  工程名称：YS-V0.7语音识别模块驱动程序
+   3          **      CPU: STC11L08XE
+   4          **      晶振：22.1184MHZ
+   5          **      波特率：9600 bit/S
+   6          **      配套产品信息：YS-V0.7语音识别开发板
+   7          **                http://yuesheng001.taobao.com
+   8          **  作者：zdings
+   9          **  联系：751956552@qq.com
+  10          **  修改日期：2013.9.13
+  11          **  说明：口令模式+IO控制： 即每次识别时都需要说"小杰"这个口令 ，才能够进�
+             -�下一级的识别
+  12          /***************************飞音云电子******************************/
+  13          
+  14          /************************************************************************************/
+  15          //      nAsrStatus 用来在main主程序中表示程序运行的状态，不是LD3320芯片内部的状态寄�
+             -��器
+  16          //      LD_ASR_NONE:            表示没有在作ASR识别
+  17          //      LD_ASR_RUNING：                表示LD3320正在作ASR识别中
+  18          //      LD_ASR_FOUNDOK:         表示一次识别流程结束后，有一个识别结果
+  19          //      LD_ASR_FOUNDZERO:       表示一次识别流程结束后，没有识别结果
+  20          //      LD_ASR_ERROR:           表示一次识别流程中LD3320芯片内部出现不正确的状态
+  21          /***********************************************************************************/
+  22          #include "config.h"
+*** ERROR C202 IN LINE 7 OF ..\CODE\ASRBASIC/REG_RW.H: 'P4': undefined identifier
+*** ERROR C202 IN LINE 8 OF ..\CODE\ASRBASIC/REG_RW.H: 'P3': undefined identifier
+*** ERROR C202 IN LINE 9 OF ..\CODE\ASRBASIC/REG_RW.H: 'P2': undefined identifier
+  23          uint8 idata nAsrStatus = 0;
+  24          
+  25          /***********************************************************
+  26          * 名    称： void  main(void)
+  27          * 功    能： 主函数       程序入口
+  28          * 入口参数：
+  29          * 出口参数：
+  30          * 说    明：
+  31          * 调用方法：
+  32          **********************************************************/
+  33          void  main(void)
+  34          {
+  35   1              uint8 idata nAsrRes;
+  36   1              uint8 i = 0;
+  37   1              Led_test();
+  38   1              MCU_init();
+  39   1              LD_Reset();
+  40   1              UartIni();                                                               /* 串口初始化 */
+  41   1              nAsrStatus = LD_ASR_NONE;                                                // 初始状态：没有在作AS
+             -R
+  42   1      
+  43   1              MainMenu();
+  44   1      
+  45   1              while (1)
+  46   1              {
+  47   2                      switch (nAsrStatus)
+  48   2                      {
+C51 COMPILER V9.00   SOURCEMAIN                                                            05/29/2018 18:06:27 PAGE 2   
+
+  49   3                      case LD_ASR_RUNING:
+  50   3                      case LD_ASR_ERROR:
+  51   3                              break;
+  52   3                      case LD_ASR_NONE:
+  53   3                      {
+  54   4                              nAsrStatus = LD_ASR_RUNING;
+  55   4                              if (RunASR() == 0)                                              /* 启动一次ASR识别流程：ASR初
+             -始化，ASR添加关键词语，启动ASR运算 */
+  56   4                              {
+  57   5                                      nAsrStatus = LD_ASR_ERROR;
+  58   5                              }
+  59   4                              break;
+  60   4                      }
+  61   3                      case LD_ASR_FOUNDOK:                                                /* 一次ASR识别流程结束，去
+             -取ASR识别结果 */
+  62   3                      {
+  63   4                              nAsrRes = LD_GetResult();                                       /* 获取结果 */
+  64   4                              User_handle(nAsrRes);                                           // 用户执行函数
+  65   4                              nAsrStatus = LD_ASR_NONE;
+  66   4                              break;
+  67   4                      }
+  68   3                      case LD_ASR_FOUNDZERO:
+  69   3                      default:
+  70   3                      {
+  71   4                              nAsrStatus = LD_ASR_NONE;
+  72   4                              break;
+  73   4                      }
+  74   3                      }
+  75   2              }
+  76   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  3 ERROR(S)

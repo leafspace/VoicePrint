@@ -31,11 +31,11 @@ void UartIni(void)
 }
 
 /***********************************************************
-* 名    称：
-* 功    能：
-* 入口参数： 无
+* 名    称： 
+* 功    能： 
+* 入口参数： 无 
 * 出口参数：无
-* 说    明：
+* 说    明： 					 
 **********************************************************/
 void Uart_Isr() interrupt 4 using 1
 {
@@ -77,14 +77,14 @@ void PrintCom(uint8_t *DAT)
 }
 
 /************************************************************************
-功能描述： 串口发送识别的字符串数据
-入口参数： 	code：识别的字符code
+功能描述： 串口发送字符串数据
+入口参数： 	*DAT：字符串指针
 返 回 值： none
 其他说明： API 供外部使用，直观！
 **************************************************************************/
-void PrintComReg(uint8 code)
+void PrintComReg(uint8_t codeID)
 {
-	uint8_t buffer[0xff] = { 0 };
-	sprintf(buffer, "<LDV7 REG>%d</LDV7 REG>", code)
+	uint8_t buffer[COMBUFFERSIZE] = { 0 };
+	sprintf(buffer, "<LDV7 REG>%d</LDV7 REG>", codeID);
 	PrintCom(buffer);
 }

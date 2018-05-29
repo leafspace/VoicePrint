@@ -168,7 +168,7 @@
         </Utilities>
         <Target51>
           <Target51Misc>
-            <MemoryModel>2</MemoryModel>
+            <MemoryModel>0</MemoryModel>
             <RTOS>0</RTOS>
             <RomSize>2</RomSize>
             <DataHold>0</DataHold>
@@ -347,19 +347,19 @@
           <GroupName>APP</GroupName>
           <Files>
             <File>
-              <FileName>SourceMain.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\code\SourceMain.c</FilePath>
+              <FilePath>..\code\main.c</FilePath>
             </File>
             <File>
               <FileName>LDChip.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\code\ASRBasic\LDChip.c</FilePath>
+              <FilePath>..\code\LDChip.c</FilePath>
             </File>
             <File>
               <FileName>Reg_RW.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\code\ASRBasic\Reg_RW.c</FilePath>
+              <FilePath>..\code\Reg_RW.c</FilePath>
             </File>
           </Files>
         </Group>

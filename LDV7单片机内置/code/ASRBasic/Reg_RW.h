@@ -1,6 +1,8 @@
 #ifndef REG_RW_H
 #define REG_RW_H
 
+#include "config.h"
+
 // 驱动端口定义
 sbit LD_MODE = P4 ^ 3;                                                      /*读写模式选择*/
 sbit RSTB = P3 ^ 5;	                                                        /*复位端口*/

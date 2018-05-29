@@ -1,4 +1,7 @@
-#pragram once
+#ifndef __COMMONKEYWORD_H
+#define __COMMONKEYWORD_H
+
+#include "CommonKeywordCode.h"
 
 #define DATE_ROW 8   /*数组二维数值*/
 #define DATE_CAL 20		/*数组一维数值*/
@@ -24,3 +27,5 @@ uint8 code pCode[DATE_ROW] = {
   CODE_SH, \
   CODE_GZ
 };	/*添加识别码，用户修改*/
+
+#endif

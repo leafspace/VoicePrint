@@ -44,7 +44,7 @@ void LD_Reset()
 入口参数： none
 返 回 值： none
 其他说明： 该函数为出厂配置，一般不需要修改；
-有兴趣的客户可对照开发手册根据需要自行修改。
+					 有兴趣的客户可对照开发手册根据需要自行修改。
 **************************************************************************/
 void LD_Init_Common()
 {
@@ -69,7 +69,7 @@ void LD_Init_Common()
 	delay(10);
 
 	LD_WriteReg(0xCD, 0x04);
-	//	LD_WriteReg(0x17, 0x4c);
+	//	LD_WriteReg(0x17, 0x4c); 
 	delay(5);
 	LD_WriteReg(0xB9, 0x00);
 	LD_WriteReg(0xCF, 0x4F);
@@ -81,7 +81,7 @@ void LD_Init_Common()
 入口参数：	 none
 返 回 值： 	 none
 其他说明：	 该函数为出厂配置，一般不需要修改；
-有兴趣的客户可对照开发手册根据需要自行修改。
+					 有兴趣的客户可对照开发手册根据需要自行修改。
 **************************************************************************/
 void LD_Init_ASR()
 {
@@ -105,8 +105,8 @@ void LD_Init_ASR()
 入口参数：	 none
 返 回 值： 	 none
 其他说明：	当LD模块接收到音频信号时，将进入该函数，
-判断识别是否有结果，如果没有从新配置寄
-存器准备下一次的识别。
+						判断识别是否有结果，如果没有从新配置寄
+			存器准备下一次的识别。
 **************************************************************************/
 void ProcessInt0(void)
 {
@@ -155,11 +155,11 @@ void ProcessInt0(void)
 入口参数：	none
 返 回 值：  asrflag：1->启动成功， 0—>启动失败
 其他说明：	识别顺序如下:
-1、RunASR()函数实现了一次完整的ASR语音识别流程
-2、LD_AsrStart() 函数实现了ASR初始化
-3、LD_AsrAddFixed() 函数实现了添加关键词语到LD3320芯片中
-4、LD_AsrRun()	函数启动了一次ASR语音识别流程
-任何一次ASR识别流程，都需要按照这个顺序，从初始化开始��
+						1、RunASR()函数实现了一次完整的ASR语音识别流程
+						2、LD_AsrStart() 函数实现了ASR初始化
+						3、LD_AsrAddFixed() 函数实现了添加关键词语到LD3320芯片中
+						4、LD_AsrRun()	函数启动了一次ASR语音识别流程
+						任何一次ASR识别流程，都需要按照这个顺序，从初始化开始��
 **************************************************************************/
 uint8 RunASR(void)
 {
@@ -265,20 +265,42 @@ uint8 LD_AsrRun()
 入口参数： none
 返 回 值： flag：1->添加成功
 其他说明： 用户修改.
-1、根据如下格式添加拼音关键词，同时注意修改sRecog 和pCode 数组的长度
-和对应变了k的循环置。拼音串和识别码是一一对应的。
-2、开发者可以学习"语音识别芯片LD3320高阶秘籍.pdf"中
-关于垃圾词语吸收错误的用法，来提供识别效果。
-3、”xiao jie “ 为口令，故在每次识别时，必须先发一级口令“小捷”
+					 1、根据如下格式添加拼音关键词，同时注意修改sRecog 和pCode 数组的长度
+					 和对应变了k的循环置。拼音串和识别码是一一对应的。
+					 2、开发者可以学习"语音识别芯片LD3320高阶秘籍.pdf"中
+		   关于垃圾词语吸收错误的用法，来提供识别效果。
+					 3、”xiao jie “ 为口令，故在每次识别时，必须先发一级口令“小捷”
 **************************************************************************/
 uint8 LD_AsrAddFixed()
 {
 	uint8 k, flag;
 	uint8 nAsrAddLength;
-
+#define DATE_A 8   /*数组二维数值*/
+#define DATE_B 20		/*数组一维数值*/
+	uint8 code sRecog[DATE_A][DATE_B] = {
+																			"xiao jie",\
+																			"kai fa ban yan zheng",\
+																			"dai ma ce shi",\
+																			"kai deng",\
+																			"guan deng",\
+																			"bei jing",\
+																			"shang hai",\
+																			"guang zhou"
+	};	/*添加关键词，用户修改*/
+	uint8 code pCode[DATE_A] = {
+																			CODE_CMD,\
+																			CODE_KFBYZ,\
+																			CODE_DMCS,\
+																			CODE_KD,\
+																			CODE_GD,\
+																			CODE_BJ,\
+																			CODE_SH,\
+																			CODE_GZ
+	};	/*添加识别码，用户修改*/
 	flag = 1;
-	for (k = 0; k < DATE_ROW; k++)
+	for (k = 0; k < DATE_A; k++)
 	{
+
 		if (LD_Check_ASRBusyFlag_b2() == 0)
 		{
 			flag = 0;
@@ -292,7 +314,7 @@ uint8 LD_AsrAddFixed()
 		LD_WriteReg(0x08, 0x00);
 		delay(1);
 
-		for (nAsrAddLength = 0; nAsrAddLength < DATE_CAL; nAsrAddLength++)
+		for (nAsrAddLength = 0; nAsrAddLength < DATE_B; nAsrAddLength++)
 		{
 			if (sRecog[k][nAsrAddLength] == 0)
 				break;
@@ -314,3 +336,6 @@ uint8 LD_GetResult()
 {
 	return LD_ReadReg(0xc5);
 }
+
+
+

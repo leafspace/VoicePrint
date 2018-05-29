@@ -1,3 +1,6 @@
+#ifndef STC11XX_H
+#define STC11XX_H
+
 //--------------------------------------------------------------------------------
 //新一代 1T 8051系列 单片机内核特殊功能寄存器 C51 Core SFRs
 //                                          7     6      5       4     3    2    1     0   Reset Value
@@ -292,3 +295,4 @@ sfr IAP_TRIG = 0xC6;
 sfr IAP_CONTR = 0xC7; //IAP Control Register  IAPEN SWBS SWRST CFAIL  -   WT2  WT1   WT0   0000,x000
 //--------------------------------------------------------------------------------
 
+#endif
