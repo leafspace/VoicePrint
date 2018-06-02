@@ -151,12 +151,12 @@ void User_handle(uint8 dat)
 		LED = 0;
 	}
 	else if (ENABLE == G0_flag) {
-		G0_flag = DISABLE;
 		LED = 1;
 		if (dat < CODE_ZHANG) {
 			commondQueue.commondQueue[commondQueue.queueLength] = dat;
 			commondQueue.queueLength++;
 		} else {
+			G0_flag = DISABLE;
 			PrintComReg();
 		}
 	}
