@@ -1,14 +1,14 @@
 #include "CommonKeyword.h"
 
 /*添加关键词，用户修改*/
-uint8 code sRecog[DATE_ROW][DATE_CAL] = {
-    "huan xing", \
-    "kai fa ban yan zheng", \
-    "dai ma ce shi", \
-    "kao bei", \
-    "sao miao", \
-    "yi", \
-    "er", \
+uint8 sRecog[DATE_ROW][DATE_CAL] = {
+    "huan xing",
+    "kai fa ban yan zheng",
+    "dai ma ce shi",
+    "kao bei",
+    "sao miao",
+    "yi",
+    "er",
     "san",
     "si",
     "wu",
@@ -27,10 +27,10 @@ uint8 code sRecog[DATE_ROW][DATE_CAL] = {
 };
 
 /*添加识别码，用户修改*/
-uint8 code pCode[DATE_ROW] = {
-    CODE_CMD, \
-    CODE_KFBYZ, \
-    CODE_DMCS, \
+uint8 pCode[DATE_ROW] = {
+    CODE_CMD,
+    CODE_KFBYZ,
+    CODE_DMCS,
     CODE_COPY,
     CODE_SCAN,
     CODE_01,

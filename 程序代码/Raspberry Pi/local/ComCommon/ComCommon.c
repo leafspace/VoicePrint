@@ -1,10 +1,14 @@
 #include "ComCommon.h"
 
+const int32_t name_arr[] = { B0, B50, B75, B110, B134, B150, B200, B300, B600, B1200, B1800, B2400, B9600, B38400, B57600, B115200 };
+const int32_t speed_arr[] = { 0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400, 9600, 38400, 57600, 115200 };
+
 bool set_speed(int comID, int speed)
 {
 	struct termios optTermios;
 	tcgetattr(comID, &optTermios);
-	for (int i = 0, status = 0; i < min(sizeof(speed_arr), sizeof(name_arr)) / sizeof(int); ++i) {
+	int minSize = sizeof(speed_arr) > sizeof(name_arr) ? sizeof(name_arr) : sizeof(speed_arr);
+	for (int i = 0, status = 0; i < minSize / sizeof(int); ++i) {
 		if (speed == speed_arr[i]) {
 			tcflush(comID, TCIOFLUSH);
 			cfsetispeed(&optTermios, name_arr[i]);

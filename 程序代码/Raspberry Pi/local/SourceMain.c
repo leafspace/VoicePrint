@@ -21,10 +21,10 @@ int main()
 		// 查找可用设备
 		int usefulDriveNum = 0;
 		char dirveName[15] = { 0 };
-		int driverID[DRIVESIZE] = { -1 };
+		int driveID[DRIVESIZE] = { -1 };
 		for (int i = 0; i < DRIVESIZE; ++i) {
 			sprintf(dirveName, "/dev/ttyS%d", i);
-			int comFId = open(driveName, O_RDWR);
+			int comFId = open(dirveName, O_RDWR);
 			driveID[i] = comFId;
 		}
 
@@ -32,7 +32,7 @@ int main()
 		printf("TIP : Com drive list :\n");
 		for (int i = 0; i < DRIVESIZE; ++i) {
 			sprintf(dirveName, "/dev/ttyS%d", i);
-			printf("    NO.%d\t%s\t", (i + 1), driveName);
+			printf("    NO.%d\t%s\t", (i + 1), dirveName);
 			if (driveID[i] < 0) {
 				printf("NG\n");
 			}
@@ -52,7 +52,7 @@ int main()
 		int comFId = 0;
 		printf("TIP : Witch one drive you want select : ");
 		do {
-			scanf_s("%d", &comFId);
+			scanf("%d", &comFId);
 			if (comFId <= 0 || comFId > DRIVESIZE) {
 				printf("ERROR : Wrong dirve number !\n");
 				printf("TIP : Please enter a new drive number :");
@@ -63,7 +63,7 @@ int main()
 			}
 			else {
 				sprintf(dirveName, "/dev/ttyS%d", comFId);
-				printf("TIP : You choose [%d] dirver (%s) .\n", comFId, driverName);
+				printf("TIP : You choose [%d] dirver (%s) .\n", comFId, dirveName);
 				break;
 			}
 		} while (true);
@@ -81,11 +81,13 @@ int main()
 
 		// 读取消息
 		char *infoBuffer = malloc(sizeof(char)* BUFFERSIZE);
-		assert(infoBudder != NULL);
+		if (infoBuffer == NULL) {
+			printf("ERROR : Hav't memory !\n");
+		}
 
 		int readSize = -1;
 		if ((readSize = read(comFId, infoBuffer, BUFFERSIZE)) > 0) {
-			infoBudder[readSize + 1] = 0;
+			infoBuffer[readSize + 1] = 0;
 			printf("%s\n", infoBuffer);
 		}
 
