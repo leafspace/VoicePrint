@@ -3,6 +3,16 @@
 const int32_t name_arr[] = { B0, B50, B75, B110, B134, B150, B200, B300, B600, B1200, B1800, B2400, B9600, B38400, B57600, B115200 };
 const int32_t speed_arr[] = { 0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400, 9600, 38400, 57600, 115200 };
 
+/*
+***********************************************************
+*
+*	函数名	: set_speed
+*	功能	: 设置波特率
+*	参数	: 
+*	返回值	:
+*
+***********************************************************
+*/
 bool set_speed(int comID, int speed)
 {
 	struct termios optTermios;
@@ -23,7 +33,17 @@ bool set_speed(int comID, int speed)
 	return true;
 }
 
-int set_Parity(int comID, int dataBits, int stopBits, int parity)
+/*
+***********************************************************
+*
+*	函数名	: set_parity
+*	功能	: 设置设备参数
+*	参数	: 
+*	返回值	:
+*
+***********************************************************
+*/
+int set_parity(int comID, int dataBits, int stopBits, int parity)
 {
 	struct termios optTermios;
 	if (tcgetattr(comID, &optTermios) != 0) {
@@ -87,4 +107,50 @@ int set_Parity(int comID, int dataBits, int stopBits, int parity)
 		return false;
 	}
 	return true;
+}
+
+/*
+***********************************************************
+*
+*	函数名	: findUsefulDriveList
+*	功能	: 查找范围内可用设备
+*	参数	: 
+				【in】driveSize    : 设备号范围
+				【out】driveID    : 设备号保存处
+*	返回值	: 【ret】usefulDriveNum    :可用设备数量
+*
+***********************************************************
+*/
+int findUsefulDriveList(int driveSize, int *driveID)
+{
+	int usefulDriveNum = 0;
+	char driveName[15] = { 0 };
+	for (int i = 0; i < driveSize; ++i) {
+		sprintf(driveName, "/dev/ttyS%d", i);
+		int comFId = open(driveName, O_RDWR);
+		driveID[i] = comFId;
+		if (driveID[i] > 0) {
+			usefulDriveNum++;
+		}
+	}
+	return usefulDriveNum;
+}
+
+/*
+***********************************************************
+*
+*	函数名	: closeUsefulDriveList
+*	功能	: 关闭所有打开的设备
+*	参数	: 
+				【in】driveSize    : 设备号范围
+				【in】driveID    : 设备号保存处
+*	返回值	: 无
+*
+***********************************************************
+*/
+void closeUsefulDriveList(int driveSize, int *driveID)
+{
+	for (int i = 0; i < driveSize; ++i) {
+		close(driveID[i]);
+	}
 }

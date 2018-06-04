@@ -6,14 +6,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "ComCommon/ComCommon.h"
+#include "MainCommon/MainCommon.h"
+#include "WebServer/ServerCommon.h"
 
-#define false   -1
-#define true    1
-
-#define DRIVESIZE   20
-#define LDV7SPEED   9600
 #define BUFFERSIZE  1024
-
 
 int main()
 {
@@ -22,25 +18,11 @@ int main()
 		int usefulDriveNum = 0;
 		char dirveName[15] = { 0 };
 		int driveID[DRIVESIZE] = { -1 };
-		for (int i = 0; i < DRIVESIZE; ++i) {
-			sprintf(dirveName, "/dev/ttyS%d", i);
-			int comFId = open(dirveName, O_RDWR);
-			driveID[i] = comFId;
-		}
+
+		usefulDriveNum = findUsefulDriveList(DRIVESIZE, driveID);
 
 		// 打印设备可用状态
-		printf("TIP : Com drive list :\n");
-		for (int i = 0; i < DRIVESIZE; ++i) {
-			sprintf(dirveName, "/dev/ttyS%d", i);
-			printf("    NO.%d\t%s\t", (i + 1), dirveName);
-			if (driveID[i] < 0) {
-				printf("NG\n");
-			}
-			else {
-				printf("OK\n");
-				usefulDriveNum++;
-			}
-		}
+		printUsefulDriveList(DRIVESIZE, driveID);
 
 		// 没有可以使用的设备
 		if (usefulDriveNum == 0) {
@@ -49,28 +31,11 @@ int main()
 		}
 
 		// 用户选择一个可用的设备
-		int comFId = 0;
-		printf("TIP : Witch one drive you want select : ");
-		do {
-			scanf("%d", &comFId);
-			if (comFId <= 0 || comFId > DRIVESIZE) {
-				printf("ERROR : Wrong dirve number !\n");
-				printf("TIP : Please enter a new drive number :");
-			}
-			else if (driveID[comFId] < 0) {
-				printf("ERROR : Driver can't use !\n");
-				printf("TIP : Please enter a new drive number :");
-			}
-			else {
-				sprintf(dirveName, "/dev/ttyS%d", comFId);
-				printf("TIP : You choose [%d] dirver (%s) .\n", comFId, dirveName);
-				break;
-			}
-		} while (true);
+		int comFId = chooseUsefulDrive(DRIVESIZE, driveID);
+		
 
-		set_speed(comFId, LDV7SPEED);
-
-		bool isSuccess = set_Parity(comFId, 8, 1, 'N');
+		// 设置波特率参数
+		bool isSuccess = setDriveParam(comFId, LDV7SPEED, 8, 1, 'N');
 		if (isSuccess == false) {
 			printf("ERROR : Can't set dirver[%d]'s parity !\n", comFId);
 			continue;
@@ -89,9 +54,10 @@ int main()
 		if ((readSize = read(comFId, infoBuffer, BUFFERSIZE)) > 0) {
 			infoBuffer[readSize + 1] = 0;
 			printf("%s\n", infoBuffer);
+			getRequest();
 		}
 
 		free(infoBuffer);
-		close(comFId);
+		closeUsefulDriveList(DRIVESIZE, driveID);
 	} while (true);
 }

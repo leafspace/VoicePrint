@@ -40,7 +40,7 @@ void  main(void)
 	UartIni();                                                               /* 串口初始化 */
 	nAsrStatus = LD_ASR_NONE;                                                // 初始状态：没有在作ASR
 
-	// 初始化全局命令词列表
+	// 初始化全局识别命令词队列
 	commondQueue.queueLength = 0;
 
 	MainMenu();

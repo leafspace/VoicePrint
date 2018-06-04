@@ -1,2 +1,2 @@
-gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c SourceMain.c -o voicePrinter
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/getRequest.c MainCommon/MainCommon.c SourceMain.c -o voicePrinter
 ./voicePrinter

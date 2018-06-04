@@ -19,6 +19,7 @@ void MainMenu()
 {
 	uint8 i = 0;
 	uint8_t msgBuffer[COMBUFFERSIZE] = { 0 };
+	// 打印可操作菜单
 	PrintCom("========================================\r\n");
 	PrintCom("========== LDV7 Voice Printr ===========\r\n");
 	sprintf(msgBuffer, "First level password : %s\r\n", sRecog[0]);
@@ -135,6 +136,7 @@ void ExtInt0Handler(void) interrupt 0
 {
 	ProcessInt0();
 }
+
 /***********************************************************
 * 名    称：用户执行函数
 * 功    能：识别成功后，执行动作可在此进行修改
@@ -144,19 +146,28 @@ void ExtInt0Handler(void) interrupt 0
 **********************************************************/
 void User_handle(uint8 dat)
 {
-	// UARTSendByte(dat);
-	if (0 == dat)
-	{
+	uint8_t tempBuffer[COMBUFFERSIZE] = { 0 };
+	if (0 == dat) {                                                         // 关键词唤醒
 		G0_flag = ENABLE;
 		LED = 0;
+		PrintCom("TIP : System wakeup ! \r\n");
 	}
 	else if (ENABLE == G0_flag) {
 		LED = 1;
+		PrintCom("TIP : Recognized code ：");
+		sprintf(tempBuffer, "%d\r\n", dat);
+		PrintCom(tempBuffer);
+
 		if (dat < CODE_ZHANG) {
-			commondQueue.commondQueue[commondQueue.queueLength] = dat;
+			commondQueue.commondQueue[commondQueue.queueLength] = dat;      // 将识别到的关键词识别码放入队列
 			commondQueue.queueLength++;
+			if (commondQueue.queueLength == COMMONDQUEUESIZE) {
+				G0_flag = DISABLE;                                          // 一串命令结束	
+				PrintComReg();
+			}
 		} else {
-			G0_flag = DISABLE;
+			G0_flag = DISABLE;                                              // 一串命令结束
+			PrintCom("TIP : Recognized list over ! \r\n");
 			PrintComReg();
 		}
 	}

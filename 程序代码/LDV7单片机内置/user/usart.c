@@ -80,22 +80,24 @@ void PrintCom(uint8_t *DAT)
 功能描述： 打印积蓄的识别关键词列表
 入口参数： 	
 返 回 值： none
-其他说明： API 供外部使用，直观！
+其他说明： 发送给树莓派的消息
+			例：<LDV7 REG>4 6 20</LDV7 REG>
+			代表意义：拷贝 1 张
 **************************************************************************/
 void PrintComReg(void)
 {
-	uint8_t i = 0;
-	uint8_t temp[COMBUFFERSIZE] = { 0 };
-	uint8_t buffer[COMBUFFERSIZE] = { 0 };
+	uint8_t i = 0;                                                          // 循环变量
+	uint8_t temp[COMBUFFERSIZE] = { 0 };                                    // 临时保存的字符串
+	uint8_t buffer[COMBUFFERSIZE] = { 0 };                                  // 发送给树莓派的内容
 	strcat(buffer, "<LDV7 REG>");
-	for (i = 0; i < commondQueue.queueLength; ++i) {
-		sprintf(temp, "%d", commondQueue.commondQueue[i]);
+	for (i = 0; i < commondQueue.queueLength; ++i) {                        // 遍历队列中的识别过的数据
+		sprintf(temp, "%d", commondQueue.commondQueue[i]);                  // 将数据格式化
 		strcat(buffer, temp);
 		if ((i + 1) != commondQueue.queueLength) {
 			strcat(buffer, "\t");
 		}
 	}
-	commondQueue.queueLength = 0;
+	commondQueue.queueLength = 0;                                           // 清空识别队列
 	strcat(buffer, "</LDV7 REG>\r\n");
-	PrintCom(buffer);
+	PrintCom(buffer);                                                       // 发送串口消息
 }
