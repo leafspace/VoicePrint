@@ -1,8 +1,13 @@
 #pragma once
 
+#include <fcntl.h>
+#include <errno.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <termios.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define bool int
 

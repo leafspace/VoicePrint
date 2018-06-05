@@ -1,10 +1,6 @@
-#include <fcntl.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "ComCommon/ComCommon.h"
 #include "MainCommon/MainCommon.h"
 #include "WebServer/ServerCommon.h"
