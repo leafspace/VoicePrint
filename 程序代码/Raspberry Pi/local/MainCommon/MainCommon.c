@@ -18,7 +18,7 @@ void printUsefulDriveList(int driveSize, int *driveID)
 	int i = 0;
 	char dirveName[15] = { 0 };
 	for (i = 0; i < DRIVESIZE; ++i) {
-		sprintf(dirveName, "/dev/ttyS%d", i);
+		sprintf(dirveName, "/dev/ttyUSB%d", i);
 		printf("    NO.%d\t%d\t%s\t", (i + 1), driveID[i], dirveName);
 		if (driveID[i] < 0) {
 			printf("NG\n");
@@ -57,8 +57,8 @@ int chooseUsefulDrive(int driveSize, int *driveID)
 			printf("TIP : Please enter a new drive number :");
 		}
 		else {
-			sprintf(dirveName, "/dev/ttyS%d", comFId - 1);
-			printf("TIP : You choose [%d] dirver (%s) .\n", comFId, dirveName);
+			sprintf(dirveName, "/dev/ttyUSB%d", comFId - 1);
+			printf("TIP : You choose [%d] dirver (%s) .\n", comFId - 1, dirveName);
 			return comFId - 1;
 		}
 	} while (true);
@@ -81,6 +81,19 @@ int chooseUsefulDrive(int driveSize, int *driveID)
 */
 bool setDriveParam(int comID, int speed, int dataBits, int stopBits, int parity)
 {
-	set_speed(comID, speed);
-	return set_parity(comID, dataBits, stopBits, parity);
+	bool isSuccess = false;
+	printf("TIP : ComID = %d, Speed = %d . \n", comID, speed);
+	isSuccess = set_speed(comID, speed);
+	if (isSuccess == false) {
+		printf("ERROR : Set speed failue ! \n");
+		return false;
+	}
+	
+	printf("TIP : ComID = %d, DataBits = %d, StopBits = %d, Parity = %c . \n", comID, dataBits, stopBits, parity);
+	isSuccess = set_parity(comID, dataBits, stopBits, parity);
+	if (isSuccess == false) {
+		printf("ERROR : Set parity failue ! \n");
+		return false;
+	}
+	return isSuccess;
 }

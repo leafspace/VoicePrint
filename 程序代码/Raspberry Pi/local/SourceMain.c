@@ -21,14 +21,24 @@ int main()
 		printUsefulDriveList(DRIVESIZE, driveID);
 
 		// 没有可以使用的设备
+		int comFId = 0;
 		if (usefulDriveNum == 0) {
 			printf("ERROR : Have no com drive !\n");
 			break;
+		} else if(usefulDriveNum == 1) {
+			printf("TIP : Only have one drive .\n");
+			for (int i = 0; i < DRIVESIZE; ++i) {
+				if (driveID[i] >=0) {
+					comFId = driveID[i];
+					sprintf(dirveName, "/dev/ttyUSB%d", i);
+					printf("TIP : You choose [%d] dirver (%s) .\n", i + 1, dirveName);
+					break;
+				}
+			}
+		} else {
+			// 用户选择一个可用的设备
+			comFId = chooseUsefulDrive(DRIVESIZE, driveID);
 		}
-
-		// 用户选择一个可用的设备
-		int comFId = chooseUsefulDrive(DRIVESIZE, driveID);
-
 
 		// 设置波特率参数
 		bool isSuccess = setDriveParam(comFId, LDV7SPEED, 8, 1, 'N');
@@ -36,6 +46,7 @@ int main()
 			printf("ERROR : Can't set dirver[%d]'s parity !\n", comFId);
 			continue;
 		}
+		
 
 		// 发送消息
 		// write(comFId, "information", sizeof("information"));
@@ -47,16 +58,23 @@ int main()
 		}
 
 		int readSize = -1;
-		if ((readSize = read(comFId, infoBuffer, BUFFERSIZE)) > 0) {
-			infoBuffer[readSize + 1] = 0;
-			printf("TIP[LDV7] : %s\n", infoBuffer);
-			if (strstr(infoBuffer, "<LDV7 REG>") && strstr(infoBuffer, "</LDV7 REG>")) {
-				isSuccess = getRequest();
-				if (isSuccess == false) {
-					printf("ERROR : Send <get> request failue !\n");
+		printf("TIP : [LDV7] Info list . Waiting ... \n");
+		do {
+			if ((readSize = read(comFId, infoBuffer, BUFFERSIZE)) > 0) {
+				infoBuffer[readSize] = 0;
+				printf("[LDV7] : %s", infoBuffer);
+				if (strstr(infoBuffer, "<LDV7 REG>") && strstr(infoBuffer, "</LDV7 REG>")) {
+					isSuccess = getRequest();
+					if (isSuccess == false) {
+						printf("ERROR : Send <get> request failue !\n");
+						break;
+					}
 				}
+			} else {
+				break;
 			}
-		}
+		} while(true);
+		printf("TIP : Finish link . \n");
 
 		free(infoBuffer);
 		closeUsefulDriveList(DRIVESIZE, driveID);

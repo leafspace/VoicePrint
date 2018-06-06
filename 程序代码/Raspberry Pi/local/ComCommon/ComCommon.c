@@ -47,7 +47,7 @@ bool set_speed(int comID, int speed)
 *
 ***********************************************************
 */
-int set_parity(int comID, int dataBits, int stopBits, int parity)
+bool set_parity(int comID, int dataBits, int stopBits, int parity)
 {
 	struct termios optTermios;
 	if (tcgetattr(comID, &optTermios) != 0) {
@@ -132,7 +132,7 @@ int findUsefulDriveList(int driveSize, int *driveID)
 	char driveName[15] = { 0 };
 	for (i = 0; i < driveSize; ++i) {
 		sprintf(driveName, "/dev/ttyUSB%d", i);
-		int comFId = open(driveName, O_RDWR | O_NOCTTY | O_NDELAY);
+		int comFId = open(driveName, O_RDWR);
 		driveID[i] = comFId;
 		if (driveID[i] > 0) {
 			usefulDriveNum++;

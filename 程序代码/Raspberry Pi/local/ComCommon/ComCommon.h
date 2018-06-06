@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <termios.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -39,7 +40,7 @@ bool set_speed(int, int);
 *
 ***********************************************************
 */
-int set_parity(int, int, int, int);
+bool set_parity(int, int, int, int);
 
 /*
 ***********************************************************
