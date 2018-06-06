@@ -1,41 +1,4 @@
-#pragma once
-
-#include <time.h>
-#include <stdio.h>
-#include <errno.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-/*
-***********************************************************
-*
-*	函数名	: getRequest
-*	功能	: 向定义的目标主机发送get请求
-*	参数	: 无
-*	返回值	: 【ret】isSuccess : 是否成功
-*
-***********************************************************
-*/
-int getRequest(void);
-/*
-***********************************************************
-*
-*	函数名	: postRequest
-*	功能	: 向定义的目标主机发送post请求
-*	参数	: 无
-*	返回值	: 【ret】isSuccess : 是否成功
-*
-***********************************************************
-*/
-int postRequest(void);
+#include "ServerCommon.h"
 
 /*
 ***********************************************************
@@ -49,7 +12,20 @@ int postRequest(void);
 *
 ***********************************************************
 */
-int ResolveProtocol(char* address, char* protocol);
+int ResolveProtocol(char* address, char* protocol)
+{
+    int i = 0;
+    char *position = NULL;
+    if ((position = strstr(address, "://")) != NULL) {
+        for (i = 0; (address + i) != position; ++i) {
+            protocol[i] = *(address + i);
+        }
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 /*
 ***********************************************************
 *
@@ -62,7 +38,18 @@ int ResolveProtocol(char* address, char* protocol);
 *
 ***********************************************************
 */
-int ResolveIP(char* address, char* ip);
+int ResolveIP(char* address, char* ip)
+{
+    char *position = NULL;
+    position = strstr(address, "://");
+    if (position == NULL) {
+        position = address;
+    }
+
+    // Todo 未完待续
+
+}
+
 /*
 ***********************************************************
 *
@@ -75,7 +62,11 @@ int ResolveIP(char* address, char* ip);
 *
 ***********************************************************
 */
-int ResolvePath(char* address, char* path);
+int ResolvePath(char* address, char* path)
+{
+
+}
+
 /*
 ***********************************************************
 *
@@ -88,4 +79,7 @@ int ResolvePath(char* address, char* path);
 *
 ***********************************************************
 */
-int ResolveParameter(char* address, char* parameter);
+int ResolveParameter(char* address, char* parameter)
+{
+
+}

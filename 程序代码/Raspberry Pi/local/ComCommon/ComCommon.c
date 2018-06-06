@@ -8,17 +8,18 @@ const int32_t speed_arr[] = { 0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 180
 *
 *	函数名	: set_speed
 *	功能	: 设置波特率
-*	参数	: 
+*	参数	:
 *	返回值	:
 *
 ***********************************************************
 */
 bool set_speed(int comID, int speed)
 {
+	int i = 0, status = 0;
 	struct termios optTermios;
 	tcgetattr(comID, &optTermios);
 	int minSize = sizeof(speed_arr) > sizeof(name_arr) ? sizeof(name_arr) : sizeof(speed_arr);
-	for (int i = 0, status = 0; i < minSize / sizeof(int); ++i) {
+	for (i = 0, status = 0; i < minSize / sizeof(int); ++i) {
 		if (speed == speed_arr[i]) {
 			tcflush(comID, TCIOFLUSH);
 			cfsetispeed(&optTermios, name_arr[i]);
@@ -27,7 +28,10 @@ bool set_speed(int comID, int speed)
 			if (status != 0) {
 				return false;
 			}
+			break;
 		}
+
+		// 清空未接收的字符
 		tcflush(comID, TCIOFLUSH);
 	}
 	return true;
@@ -38,7 +42,7 @@ bool set_speed(int comID, int speed)
 *
 *	函数名	: set_parity
 *	功能	: 设置设备参数
-*	参数	: 
+*	参数	:
 *	返回值	:
 *
 ***********************************************************
@@ -114,8 +118,8 @@ int set_parity(int comID, int dataBits, int stopBits, int parity)
 *
 *	函数名	: findUsefulDriveList
 *	功能	: 查找范围内可用设备
-*	参数	: 
-				【in】driveSize    : 设备号范围
+*	参数	:
+				【in】driveSize   : 设备号范围
 				【out】driveID    : 设备号保存处
 *	返回值	: 【ret】usefulDriveNum    :可用设备数量
 *
@@ -123,11 +127,12 @@ int set_parity(int comID, int dataBits, int stopBits, int parity)
 */
 int findUsefulDriveList(int driveSize, int *driveID)
 {
+	int i = 0;
 	int usefulDriveNum = 0;
 	char driveName[15] = { 0 };
-	for (int i = 0; i < driveSize; ++i) {
-		sprintf(driveName, "/dev/ttyS%d", i);
-		int comFId = open(driveName, O_RDWR);
+	for (i = 0; i < driveSize; ++i) {
+		sprintf(driveName, "/dev/ttyUSB%d", i);
+		int comFId = open(driveName, O_RDWR | O_NOCTTY | O_NDELAY);
 		driveID[i] = comFId;
 		if (driveID[i] > 0) {
 			usefulDriveNum++;
@@ -141,8 +146,8 @@ int findUsefulDriveList(int driveSize, int *driveID)
 *
 *	函数名	: closeUsefulDriveList
 *	功能	: 关闭所有打开的设备
-*	参数	: 
-				【in】driveSize    : 设备号范围
+*	参数	:
+				【in】driveSize  : 设备号范围
 				【in】driveID    : 设备号保存处
 *	返回值	: 无
 *
@@ -150,7 +155,8 @@ int findUsefulDriveList(int driveSize, int *driveID)
 */
 void closeUsefulDriveList(int driveSize, int *driveID)
 {
-	for (int i = 0; i < driveSize; ++i) {
+	int i = 0;
+	for (i = 0; i < driveSize; ++i) {
 		close(driveID[i]);
 	}
 }

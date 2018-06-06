@@ -71,10 +71,10 @@ void MCU_init()
 	P3 = 0xff;
 	P4 = 0xff;
 
-	P1M0 = 0XFF;	                                                        // P1端口设置为推挽输�?�功�?�?��即提高IO口驱动能力，从驱动继电器模块工�?
+	P1M0 = 0XFF;
 	P1M1 = 0X00;
 
-	LD_MODE = 0;		                                                    // 设置MD管脚为低，并行模式读�?
+	LD_MODE = 0;		                                                    // 设置MD管脚为低，并行模式读取
 	IE0 = 1;
 	EX0 = 1;
 	EA = 1;
@@ -147,6 +147,10 @@ void ExtInt0Handler(void) interrupt 0
 void User_handle(uint8 dat)
 {
 	uint8_t tempBuffer[COMBUFFERSIZE] = { 0 };
+	PrintCom("TIP : Recognized code ：\r\n");
+	sprintf(tempBuffer, "%d\r\n", dat);
+	PrintCom(tempBuffer);
+
 	if (0 == dat) {                                                         // 关键词唤醒
 		G0_flag = ENABLE;
 		LED = 0;
@@ -154,10 +158,6 @@ void User_handle(uint8 dat)
 	}
 	else if (ENABLE == G0_flag) {
 		LED = 1;
-		PrintCom("TIP : Recognized code ：");
-		sprintf(tempBuffer, "%d\r\n", dat);
-		PrintCom(tempBuffer);
-
 		if (dat < CODE_ZHANG) {
 			commondQueue.commondQueue[commondQueue.queueLength] = dat;      // 将识别到的关键词识别码放入队列
 			commondQueue.queueLength++;

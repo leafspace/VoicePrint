@@ -28,7 +28,7 @@ int main()
 
 		// 用户选择一个可用的设备
 		int comFId = chooseUsefulDrive(DRIVESIZE, driveID);
-		
+
 
 		// 设置波特率参数
 		bool isSuccess = setDriveParam(comFId, LDV7SPEED, 8, 1, 'N');
@@ -43,17 +43,23 @@ int main()
 		// 读取消息
 		char *infoBuffer = malloc(sizeof(char)* BUFFERSIZE);
 		if (infoBuffer == NULL) {
-			printf("ERROR : Hav't memory !\n");
+			printf("ERROR : Not enough memory !\n");
 		}
 
 		int readSize = -1;
 		if ((readSize = read(comFId, infoBuffer, BUFFERSIZE)) > 0) {
 			infoBuffer[readSize + 1] = 0;
-			printf("%s\n", infoBuffer);
-			getRequest();
+			printf("TIP[LDV7] : %s\n", infoBuffer);
+			if (strstr(infoBuffer, "<LDV7 REG>") && strstr(infoBuffer, "</LDV7 REG>")) {
+				isSuccess = getRequest();
+				if (isSuccess == false) {
+					printf("ERROR : Send <get> request failue !\n");
+				}
+			}
 		}
 
 		free(infoBuffer);
 		closeUsefulDriveList(DRIVESIZE, driveID);
 	} while (true);
+	return 0;
 }

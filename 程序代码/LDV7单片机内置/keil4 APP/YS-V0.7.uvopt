@@ -160,10 +160,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>34</ColumnNumber>
+      <ColumnNumber>57</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>13</TopLine>
-      <CurrentLine>37</CurrentLine>
+      <TopLine>44</TopLine>
+      <CurrentLine>68</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\code\SourceMain.c</PathWithFileName>
       <FilenameWithoutPath>SourceMain.c</FilenameWithoutPath>
@@ -204,8 +204,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>131</TopLine>
-      <CurrentLine>156</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\code\ASRBasic\MainCommon.c</PathWithFileName>
       <FilenameWithoutPath>MainCommon.c</FilenameWithoutPath>
@@ -1593,8 +1593,8 @@
         <Doc>
           <Name>..\code\ASRBasic\MainCommon.c</Name>
           <ColumnNumber>0</ColumnNumber>
-          <TopLine>131</TopLine>
-          <CurrentLine>156</CurrentLine>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

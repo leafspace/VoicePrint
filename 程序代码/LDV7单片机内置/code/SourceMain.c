@@ -50,19 +50,27 @@ void  main(void)
 		switch (nAsrStatus)
 		{
 		case LD_ASR_RUNING:
-		case LD_ASR_ERROR:
 			break;
+		case LD_ASR_ERROR:
+		{
+			PrintCom("ERROR : System error ! \r\n");
+			PrintCom("ERROR : If you have been in this state, check the hardware error in [FUN] RunASR . \r\n");
+			nAsrStatus = LD_ASR_NONE;
+			break;
+		}
 		case LD_ASR_NONE:
 		{
 			nAsrStatus = LD_ASR_RUNING;
 			if (RunASR() == 0)                                              /* 启动一次ASR识别流程：ASR初始化，ASR添加关键词语，启动ASR运算 */
 			{
+				PrintCom("ERROR : RunASR failue ! \r\n");
 				nAsrStatus = LD_ASR_ERROR;
 			}
 			break;
 		}
 		case LD_ASR_FOUNDOK:                                                /* 一次ASR识别流程结束，去取ASR识别结果 */
 		{
+			PrintCom("TIP : ASR finish ! Find result ! \r\n");
 			nAsrRes = LD_GetResult();                                       /* 获取结果 */
 			User_handle(nAsrRes);                                           // 用户执行函数
 			nAsrStatus = LD_ASR_NONE;
@@ -71,6 +79,7 @@ void  main(void)
 		case LD_ASR_FOUNDZERO:
 		default:
 		{
+			PrintCom("TIP : Can't find result ! \r\n");
 			nAsrStatus = LD_ASR_NONE;
 			break;
 		}

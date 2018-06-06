@@ -7,14 +7,14 @@
 /*
 ***********************************************************
 *
-*	函数名	: getRequest
-*	功能	: 向定义的目标主机发送get请求
+*	函数名	: postRequest
+*	功能	: 向定义的目标主机发送post请求
 *	参数	: 无
 *	返回值	: 【ret】isSuccess : 是否成功
 *
 ***********************************************************
 */
-int getRequest(void)
+int postRequest(void)
 {
 	fd_set t_setFd;
 	struct timeval tv;
@@ -47,7 +47,7 @@ int getRequest(void)
 
 	// 制作报文信息
 	memset(message, 0, BUFSIZE);
-	strcat(message, "GET http://10.244.4.27/openinterface/kickapp?appid=iojob HTTP/1.1\n");
+	strcat(message, "POST /openinterface/kickapp HTTP/1.1\n");
 	strcat(message, "Host: 10.244.4.27\n");
 	strcat(message, "Content-Type: text/html\n");
 	strcat(message, "Upgrade-Insecure-Requests: 1\n");
@@ -55,6 +55,9 @@ int getRequest(void)
 	strcat(message, "Accept-: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\n");
 	strcat(message, "Accept-Encoding: gzip, deflate\n");
 	strcat(message, "Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7\n");
+	strcat(message, "Content-Length: 11\n");                                // 11指的是参数的长度
+	strcat(message, "\n\n");
+	strcat(message, "appid=iojob");
 	strcat(message, "\r\n\r\n");
 	printf("\n");
 	printf("TIP : Send message : \n%s\n", message);
