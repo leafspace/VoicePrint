@@ -11,7 +11,7 @@
             <param-value>/WEB-INF/struts-config.xml</param-value>
         </init-param>
         <load-on-startup>2</load-on-startup>
-    </servlet>
+        </servlet>
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>

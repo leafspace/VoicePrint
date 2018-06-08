@@ -9,11 +9,7 @@
 #include <termios.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#define bool int
-
-#define true 1
-#define false -1
+#include "../AllCommon/Common.h"
 
 extern const int32_t name_arr[];
 extern const int32_t speed_arr[];

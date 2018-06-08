@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
+#include "AllCommon/Common.h"
 #include "ComCommon/ComCommon.h"
 #include "MainCommon/MainCommon.h"
-#include "WebServer/ServerCommon.h"
-
-#define BUFFERSIZE  1024
+#include "WebServer/ServerCommon/ServerCommon.h"
 
 int main()
 {
@@ -25,17 +24,19 @@ int main()
 		if (usefulDriveNum == 0) {
 			printf("ERROR : Have no com drive !\n");
 			break;
-		} else if(usefulDriveNum == 1) {
+		}
+		else if (usefulDriveNum == 1) {
 			printf("TIP : Only have one drive .\n");
 			for (int i = 0; i < DRIVESIZE; ++i) {
-				if (driveID[i] >=0) {
+				if (driveID[i] >= 0) {
 					comFId = driveID[i];
 					sprintf(dirveName, "/dev/ttyUSB%d", i);
 					printf("TIP : You choose [%d] dirver (%s) .\n", i + 1, dirveName);
 					break;
 				}
 			}
-		} else {
+		}
+		else {
 			// 用户选择一个可用的设备
 			comFId = chooseUsefulDrive(DRIVESIZE, driveID);
 		}
@@ -46,10 +47,6 @@ int main()
 			printf("ERROR : Can't set dirver[%d]'s parity !\n", comFId);
 			continue;
 		}
-		
-
-		// 发送消息
-		// write(comFId, "information", sizeof("information"));
 
 		// 读取消息
 		char *infoBuffer = malloc(sizeof(char)* BUFFERSIZE);
@@ -57,6 +54,7 @@ int main()
 			printf("ERROR : Not enough memory !\n");
 		}
 
+		// 不停监听来自单片机的消息并处理
 		int readSize = -1;
 		printf("TIP : [LDV7] Info list . Waiting ... \n");
 		do {
@@ -64,16 +62,23 @@ int main()
 				infoBuffer[readSize] = 0;
 				printf("[LDV7] : %s", infoBuffer);
 				if (strstr(infoBuffer, "<LDV7 REG>") && strstr(infoBuffer, "</LDV7 REG>")) {
-					isSuccess = getRequest();
+					initWebAddress();
+					isSuccess = doRequest(REQUEST_GET, CONTENT_TYPE_HTML, false);
 					if (isSuccess == false) {
 						printf("ERROR : Send <get> request failue !\n");
 						break;
 					}
+					isSuccess = XMLResponse();
+					if (isSuccess == false) {
+						printf("ERROR : Response XML failue !\n");
+						break;
+					}
 				}
-			} else {
+			}
+			else {
 				break;
 			}
-		} while(true);
+		} while (true);
 		printf("TIP : Finish link . \n");
 
 		free(infoBuffer);

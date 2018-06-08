@@ -4,8 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="content-style-type" content="text/css" />
-    <script type="text/javascript" src="js/ews.js">
-    </script>
+    <script type="text/javascript" src="js/ews.js"></script>
     <link rel="stylesheet" type="text/css" href="css/common.css" />
     <link rel="stylesheet" type="text/css" href="css/ews.css" />
     <title>
@@ -23,18 +22,6 @@
                                 <h1>
                                     Voice Printer
                                 </h1>
-                                <div class="SetBox" id="SetBoxAuthRight">
-                                    <div id="SetBoxAuthLeft">
-                                        <form method="post" action="#">
-                                            <div>
-                                                <!-- mid-begin: 87db7c981d87fdc89e33513b0c10e0bec2791e26a6500ebfad3c1a4a1ea5b7e9 -->Logout
-                                                <!-- mid-end -->
-                                                <input type="hidden" id="B5bc" name="B5bc" />
-                                                <input id="logout" type="submit" value="" />
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
                             <div id="corporateLogo">
                                 <img src="images/logo.gif" alt="Brother" />
@@ -44,9 +31,8 @@
                             <div>
                                 <span>
                                     <a href="#">
-                                        <!-- mid-begin: 61bfd52616ea551fcd952e01af765fc3e71dce2a2a51f3e5e34dfaf931334696 -->Brother
+                                        Brother
                                         <br />Solutions Center
-                                        <!-- mid-end -->
                                     </a>
                                 </span>
                             </div>
@@ -57,19 +43,8 @@
                                     <ul>
                                         <li class="selected">
                                             <p>
-                                                <!-- mid-begin: 424a946bb5181b588cf2fc3ca9e694df41241ec58791d69ab150397556fe1b74 -->Administrator
-                                                <!-- mid-end -->
+                                                Administrator
                                             </p>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <!-- mid-begin: 2cbf2dfc62f131dd39a408a58ba0a66be059c707ce36b5aacd202cce22a2fec0 -->Network
-                                                <!-- mid-end -->
-                                            </a>
                                         </li>
                                     </ul>
                                 </li>
@@ -97,18 +72,11 @@
                 </div>
                 <div id="mainFrameInner">
                     <div id="subMenu">
-                        <div>
-                            <a href="#">
-                                <!-- mid-begin: b55456d128eb9e14fc7dcd72f42c7e49306f83fd08f787fcb9bb796fe0acf306 -->User Restriction Function
-                                <!-- mid-end -->
-                            </a>
-                        </div>
                         <div class="selected">
                             <div class="top">
                                 <div class="bottom">
                                     <a href="#">
-                                        <!-- mid-begin: 6836b245b97e1d225b4c8a18f550abd01cfa050bcd5cb521d042eeeb4bf9d07e -->Secure Function Lock
-                                        <!-- mid-end -->
+                                        Raspberry PI Setting
                                     </a>
                                 </div>
                             </div>
@@ -118,74 +86,33 @@
                         <div id="rightFrame">
                             <div id="mainContent">
                                 <div id="pageContents" style="min-height: 775px;">
-                                    <div class="contentsGroup">
-                                        <h3>
-                                            <!-- mid-begin: fd84b3ccbc8eb031fd284704c9e40632eff5037ec2a84bba723522adb9f6cb2f -->Secure Function Lock
-                                            <!-- mid-end -->
-                                        </h3>
-                                        <p class="noteMessage">
-                                            <!-- mid-begin: 09d4f03a5189fc82b52f38b476366726782532519db7a30bafe7d62a5ddb24af -->Secure Function Lock lets you restrict Public access to certain machine functions. This feature also prevents users from changing the Default settings of the machine by limiting access to the Menu settings. Access to restricted operations can be enabled by creating a restricted user/group. Restricted users/groups must enter a password to use the machine.
-                                            <!-- mid-end -->
-                                        </p>
-                                        <h3>
-                                            <!-- mid-begin: 6973f39ef3d7fb4d3495e7965884d8b6efc0f99abea19362431f0069deb0751b -->Restricted Functions
-                                            <!-- mid-end -->
-                                        </h3>
-                                        <p class="noteMessage">
-                                            <!-- mid-begin: cc4f35aeda217ed171d21e50b419a3864666d18447ce62974e6fad004bbe9048 -->Administrators can restrict functions and set page limits per user or group.
-                                            <!-- mid-end -->
-                                        </p>
-                                        <h3>
-                                            <!-- mid-begin: 32ac7487701feb1c8a7b12abe9022c6510377d9e4cf40375c2ee69425cfb9953 -->User List
-                                            <!-- mid-end -->
-                                        </h3>
-                                        <p class="noteMessage">
-                                            <!-- mid-begin: b0c6d78bb3be9535e4496aed7392fd11447b06707ab14822d6d8922800f7db59 -->Administrators can manage user and group authentication settings.
-                                            <!-- mid-end -->
-                                        </p>
-                                    </div>
                                     <div id="pageContents">
-                                        <form method="post" action="#">
-                                            <div>
-                                                <input type="hidden" id="pageid" name="pageid" value="232" />
-                                            </div>
+                                        <form method="GET" action="index.html">
                                             <div class="contentsGroup">
                                                 <dl class="items">
                                                     <dt>
-                                                        <!-- mid-begin: 7b17dcc700ab12b8767f7194958ff2479bfd0bd03e2e566746c3463ed3ca1703 -->Storage PC Print Data
-                                                        <!-- mid-end -->
+                                                        User Name
                                                     </dt>
                                                     <dd>
                                                         <div>
-                                                            <label class="radioSimple">
-                                                                <input type="radio" name="B6c5" value="0" checked="checked" />
-                                                                <!-- mid-begin: dd2cd295e077bd5562d29b86240250b3fcd3d43da57eb01360dc3ab9fa1df588 -->Off
-                                                                <!-- mid-end -->
-                                                            </label>
-                                                            <label class="radioSimple">
-                                                                <input type="radio" name="B6c5" value="1" />
-                                                                <!-- mid-begin: a2e6eaa9d926e473ba7c5ccfae130f5309ec3b46119eaf0dc5ee189183f622a2 -->On
-                                                                <!-- mid-end -->
-                                                            </label>
+                                                            <input type="text" id="userName" name="userName" style="width:100%" />
+                                                        </div>
+                                                    </dd>
+                                                </dl>
+                                                <dl class="items">
+                                                    <dt>
+                                                        MFC Request Address
+                                                    </dt>
+                                                    <dd>
+                                                        <div>
+                                                            <input type="text" id="requestAddress" name="requestAddress" style="width:100%" />
                                                         </div>
                                                     </dd>
                                                 </dl>
                                             </div>
-                                            <div class="contentsGroup links">
-                                                <p class="links">
-                                                    <a href="#">
-                                                        <!-- mid-begin: dae94f58cf49a63cda2b214fe2497a966b5c058515d4958f25f1b7b396bda081 -->Logout Time
-                                                        <!-- mid-end -->
-                                                    </a>
-                                                </p>
-                                            </div>
                                             <div class="contentsButtons">
-                                                <!-- mid-begin: 5fed92988a03127c3373819a7c6b55ac4358861220b702a1f45de28283b9a4b2 -->
-                                                <input type="button" value="Cancel" onclick="" />
-                                                <!-- mid-end -->
-                                                <!-- mid-begin: 74fd4d61e026b98e11c80d6bb4e80f2d5773160ca814f67860583ec6c2536927 -->
+                                                <input type="reset" value="Reset" />
                                                 <input type="submit" value="Submit" />
-                                                <!-- mid-end -->
                                             </div>
                                         </form>
                                     </div>

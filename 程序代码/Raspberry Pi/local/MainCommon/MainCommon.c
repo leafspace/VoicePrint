@@ -88,7 +88,7 @@ bool setDriveParam(int comID, int speed, int dataBits, int stopBits, int parity)
 		printf("ERROR : Set speed failue ! \n");
 		return false;
 	}
-	
+
 	printf("TIP : ComID = %d, DataBits = %d, StopBits = %d, Parity = %c . \n", comID, dataBits, stopBits, parity);
 	isSuccess = set_parity(comID, dataBits, stopBits, parity);
 	if (isSuccess == false) {
