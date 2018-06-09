@@ -2,6 +2,6 @@
 
 int main()
 {
-    int isSuccess = XMLResponse();
+    int isSuccess = doResponse(true);
     return 0;
 }

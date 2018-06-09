@@ -1,7 +1,14 @@
 运行该部分程序：
 #!/bin/sh
-gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/XMLResponse/XMLResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c SourceMain.c -o voicePrinter
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c SourceMain.c -o voicePrinter
 ./voicePrinter
+
+运行该测试程序：
+#!/bin/sh
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c UnitTest/TestMain.c -o UnitTest
+./UnitTest.exe
+
+
 
 
 Q：因为非root用户无法获得读取串口的数据
@@ -13,3 +20,16 @@ Q：因为非root用户无法获得读取串口的数据
 KnowHow:
 1. 如何获取本地->target或target->本地的报文信息？
     A：使用Fiddler软件，打开软件后在右侧的工具栏依次选择Inspectors->Raw则可看到报文信息。
+
+
+
+
+来自浏览器请求树莓派服务器的请求
+GET / HTTP/1.1
+Host: localhost
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.79 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9

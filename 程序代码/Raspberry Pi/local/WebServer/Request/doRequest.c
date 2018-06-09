@@ -1,44 +1,5 @@
+#include "RequestCommon.h"
 #include "../ServerCommon/ServerCommon.h"
-
-int addressPort = 80;
-char webAddressIP[BUFFERSIZE] = { 0 };
-char webAddressPath[BUFFERSIZE] = { 0 };
-char webAddressPara[BUFFERSIZE] = { 0 };
-char webAddressPort[BUFFERSIZE] = { 0 };
-char requestWebAddress[BUFFERSIZE] = { 0 };
-
-/*
-***********************************************************
-*
-*	函数名	: initWebAddress
-*	功能	: 初始化网址的各个模块
-*	参数	: 无
-*	返回值	: 无
-*
-***********************************************************
-*/
-void initWebAddress(void)
-{
-	// 解析出访问地址的各个部分
-	bool isSuccess = false;
-	isSuccess = ResolveIP(requestWebAddress, webAddressIP);
-	if (isSuccess == false) {
-		strcpy(webAddressIP, "192.168.1.1");
-	}
-	isSuccess = ResolvePort(requestWebAddress, webAddressPort);
-	if (isSuccess == false) {
-		strcpy(webAddressPort, "80");
-		addressPort = atoi(webAddressPort);
-	}
-	isSuccess = ResolvePath(requestWebAddress, webAddressPath);
-	if (isSuccess == false) {
-		strcpy(webAddressPath, "/index.html");
-	}
-	isSuccess = ResolveParameter(requestWebAddress, webAddressPara);
-	if (isSuccess == false) {
-		strcpy(webAddressPara, "addid=remoteDo");
-	}
-}
 
 /*
 ***********************************************************

@@ -1,3 +1,5 @@
+#pragma once
+
 #define bool int
 
 #define true 1

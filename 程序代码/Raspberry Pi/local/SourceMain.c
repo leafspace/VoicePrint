@@ -68,7 +68,7 @@ int main()
 						printf("ERROR : Send <get> request failue !\n");
 						break;
 					}
-					isSuccess = XMLResponse();
+					isSuccess = doResponse(true);
 					if (isSuccess == false) {
 						printf("ERROR : Response XML failue !\n");
 						break;
