@@ -1,5 +1,5 @@
 #pragma once
-#define SIGNALVALUE 5
+#define SIGNALVALUE 1
 
 #include "../ServerCommon/ServerCommon.h"
 

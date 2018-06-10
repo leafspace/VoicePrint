@@ -17,22 +17,12 @@
 */
 void resolveMessage(char* message, char* contentType, char* requestPath)
 {
-/*
-来自浏览器请求树莓派服务器的请求
-GET / HTTP/1.1
-Host: localhost
-Connection: keep-alive
-Upgrade-Insecure-Requests: 1
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.79 Safari/537.36
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng;q=0.8
-Accept-Encoding: gzip, deflate, br
-Accept-Language: zh-CN,zh;q=0.9
-*/
     strcpy(contentType, CONTENT_TYPE_HTML);
     strcpy(requestPath, "../web/web/index.html");
 
     int i = 0;
     char *requestPathBeginPosition = NULL, *requestPathEndPosition = NULL;
+    // 获取客户端请求的文件路径
     if ((requestPathBeginPosition = strstr(message, "GET")) == NULL) {
         if ((requestPathBeginPosition = strstr(message, "POST")) != NULL) {
             requestPathBeginPosition = requestPathBeginPosition + 5;    
@@ -45,6 +35,7 @@ Accept-Language: zh-CN,zh;q=0.9
         requestPathEndPosition = requestPathEndPosition - 1;
     }
     
+    // 如果取得的地址都成功
     if (requestPathBeginPosition && requestPathEndPosition) {
         for (i = 0; (requestPathBeginPosition + i) < requestPathEndPosition; ++i) {
             requestPath[i] = *(requestPathBeginPosition + i);
@@ -60,6 +51,7 @@ Accept-Language: zh-CN,zh;q=0.9
         strcpy(fileContentType, requestPath);
         tempBeginPosition = fileContentType;
         
+        // 开始获取该文件类型
         tempBeginPosition = strstr(tempBeginPosition, ".") + 1;
         if ((tempEndPosition = strstr(tempBeginPosition, "?")) == NULL) {
             tempEndPosition = tempBeginPosition + strlen(tempBeginPosition);
@@ -80,7 +72,6 @@ Accept-Language: zh-CN,zh;q=0.9
         }
     }
 
-    printf("TIP : Resolve request path is [%s] . \n", requestPath);
     char tempBuffer[BUFFERSIZE] =  { 0 };
     strcpy(tempBuffer, "../web/web");
     strcat(tempBuffer, requestPath);
@@ -159,11 +150,19 @@ bool doResponse(bool keepListern)
 
         // 发送请求的path地址的数据
         FILE *fp = fopen(requestPath, "rb");
+        if (fp == NULL) {
+            printf("ERROR : [%s] Can't find this file ! \n", requestPath);
+            continue;
+        }
+
         do {
             int readNumber = fread(message, sizeof(char), BUFFERSIZE, fp);
             write(client_socket, message, readNumber);
-            printf("%s", message);
+            if (strncasecmp(contentType, "text", 4) == 0) {
+                printf("%s", message);
+            }
         } while (!feof(fp));
+        printf("\n");
         close(client_socket);
     } while(keepListern);
 
