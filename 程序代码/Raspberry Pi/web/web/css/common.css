@@ -309,11 +309,11 @@ img {
     }
 
         #subMenu .selected .top {
-            background: url(../../common/images/bg_round_top.gif) left top no-repeat;
+            background: url(../images/bg_round_top.gif) left top no-repeat;
         }
 
         #subMenu .selected .bottom {
-            background: url(../../common/images/bg_round_btm.gif) left bottom no-repeat;
+            background: url(../images/bg_round_btm.gif) left bottom no-repeat;
         }
 
         #subMenu .selected,
@@ -323,7 +323,7 @@ img {
         }
 
             #subMenu .selected a {
-                background: url(../../common/images/rct.gif) 3px 5px no-repeat;
+                background: url(../images/rct.gif) 3px 5px no-repeat;
                 font-size: 87%;
             }
 
