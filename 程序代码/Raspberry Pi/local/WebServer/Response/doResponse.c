@@ -84,6 +84,75 @@ void resolveMessage(char* message, char* contentType, char* requestPath)
 /*
 ***********************************************************
 *
+*	函数名	: resolveParameter
+*	功能	: 解析对象请求的报文
+*	参数	: 
+				【in】message   : 做成的报文
+				【out】parameterStack   : 用户报文的参数队列
+*	返回值	: 无
+*
+***********************************************************
+*/
+void resolveParameter(char* message, ParameterStack *parameterStack)
+{
+    int i = 0;
+    char *requestParameterBeginPosition = NULL, *requestParameterEndPosition = NULL;
+    requestParameterEndPosition = strstr(message, "HTTP/");
+    if (requestParameterEndPosition == NULL) {
+        return ;
+    } else {
+        requestParameterEndPosition = requestParameterEndPosition - 1;
+    }
+
+    requestParameterBeginPosition = strstr(message, "?");
+    if (requestParameterBeginPosition == NULL || 
+    requestParameterBeginPosition > requestParameterEndPosition) {
+        return ;
+    } else {
+        requestParameterBeginPosition = requestParameterBeginPosition + 1;
+    }
+
+    int tIndex = 0;
+    char tempBuffer[BUFFERSIZE] = { 0 };
+    for (i = 0; (requestParameterBeginPosition + i) != requestParameterEndPosition; ++i) {
+        switch(*(requestParameterBeginPosition + i))
+        {
+            case '=' : 
+                tempBuffer[tIndex] = 0;
+                parameterStack->parameterKey[parameterStack->parameterLen] = malloc(sizeof(char) * strlen(tempBuffer)); 
+                strcpy(parameterStack->parameterKey[parameterStack->parameterLen], tempBuffer); 
+                tIndex = 0;
+                break;
+            case '&' : 
+                tempBuffer[tIndex] = 0;
+                parameterStack->parameterValue[parameterStack->parameterLen] = malloc(sizeof(char) * strlen(tempBuffer)); 
+                strcpy(parameterStack->parameterValue[parameterStack->parameterLen], tempBuffer); 
+                parameterStack->parameterLen++;
+                tIndex = 0;
+                break;
+            default :
+                tempBuffer[tIndex++] = *(requestParameterBeginPosition + i);
+        }
+    }
+
+    tempBuffer[tIndex] = 0;
+    parameterStack->parameterValue[parameterStack->parameterLen] = malloc(sizeof(char) * strlen(tempBuffer)); 
+    strcpy(parameterStack->parameterValue[parameterStack->parameterLen], tempBuffer); 
+    parameterStack->parameterLen++;
+
+    printf("TIP : Resolve parameter list : \n");
+    printf("Key\t");
+    printf("Value\n");
+    for (int i = 0; i < parameterStack->parameterLen; ++i) {
+        printf("%s\t", parameterStack->parameterKey[i]);
+        printf("%s\n", parameterStack->parameterValue[i]);
+    }
+    printf("\n");
+}
+
+/*
+***********************************************************
+*
 *	函数名	: makeMessageHead
 *	功能	: 制作要发送给mfc的报文
 *	参数	: 
@@ -142,11 +211,34 @@ bool doResponse(bool keepListern)
         char contentType[BUFFERSIZE], requestPath[BUFFERSIZE];
         resolveMessage(message, contentType, requestPath);
 
+        // 解析请求中的参数队列
+        ParameterStack parameterStack;
+        parameterStack.parameterLen = 0;
+        resolveParameter(message, &parameterStack);
+
         // 制作将要返回的电文头信息
         memset(message, 0, BUFFERSIZE);
-        makeMessageHead(contentType, message);
+        if (parameterStack.parameterLen != 0) {
+            makeMessageHead(CONTENT_TYPE_HTML, message);
+        } else {
+            makeMessageHead(contentType, message);
+        }
         write(client_socket, message, strlen(message));
         printf("%s\n", message);
+
+        if (parameterStack.parameterLen != 0) {
+            bool isSuccess = setWebAddressParameter(&parameterStack);
+            freeWebAddressParameter(&parameterStack);
+            if (isSuccess == true) {
+                strcpy(message, "<html><head></head><body><h3>Set Parameter Success !</h3></body></html>");
+            } else {
+                strcpy(message, "<html><head></head><body><h3>Set Parameter Failue !</h3></body></html>");
+            }
+            write(client_socket, message, strlen(message));
+            printf("%s\n", message);
+
+            continue;
+        }
 
         // 发送请求的path地址的数据
         FILE *fp = fopen(requestPath, "rb");
@@ -169,4 +261,71 @@ bool doResponse(bool keepListern)
     close(server_socket);
 
     return true;
+}
+
+
+/*
+***********************************************************
+*
+*	函数名	: setWebAddressParameter
+*	功能	: 设置全局的向MFC发送请求的网址
+*	参数	: 
+				【in】parameterStack   : 用户报文的参数队列
+*	返回值	: 无
+*
+***********************************************************
+*/
+bool setWebAddressParameter(ParameterStack *parameterStack)
+{
+    int i = 0;
+    bool isSuccess = false;
+    // 检查密码是否正确
+    for (i = 0; i < parameterStack->parameterLen; ++i) {
+        if (strcmp(parameterStack->parameterKey[i], "userName") == 0) {
+            if (strcmp(parameterStack->parameterValue[i], "admin") == 0) {
+                isSuccess = true;
+                break;
+            }
+        }
+    }
+
+    if (isSuccess == false) {
+        return false;
+    }
+
+    // 设置参数
+    for (i = 0; i < parameterStack->parameterLen; ++i) {
+        if (strcmp(parameterStack->parameterKey[i], "requestAddress") == 0) {
+            strcpy(requestWebAddress, parameterStack->parameterValue[i]);
+            printf("TIP : Set request web address is %s . \n", requestWebAddress);
+            break;
+        }
+    }
+
+    if (i == parameterStack->parameterLen) {
+        return false;
+    }
+
+
+    return true;
+}
+
+/*
+***********************************************************
+*
+*	函数名	: freeWebAddressParameter
+*	功能	: 清除参数内存
+*	参数	: 
+				【in】parameterStack   : 用户报文的参数队列
+*	返回值	: 无
+*
+***********************************************************
+*/
+void freeWebAddressParameter(ParameterStack *parameterStack)
+{
+    for (int i = 0; i < parameterStack->parameterLen; ++i) {
+        free(parameterStack->parameterKey[i]);
+        free(parameterStack->parameterValue[i]);
+    }
+    parameterStack->parameterLen = 0;
 }
