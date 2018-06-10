@@ -7,6 +7,32 @@ char webAddressPara[BUFFERSIZE] = { 0 };
 char webAddressPort[BUFFERSIZE] = { 0 };
 char requestWebAddress[BUFFERSIZE] = { 0 };
 
+char* contentTypeListReal[CONTENT_TYPESIZE] = { 
+	"BMP", 
+	"HTML", 
+	"JPEG", 
+	"JPG", 
+	"CSS", 
+	"JS", 
+	"MP3", 
+	"PNG", 
+	"GIF", 
+	"XML",
+};
+
+char* contentTypeListDefine[CONTENT_TYPESIZE] = { 
+	CONTENT_TYPE_BMP, 
+	CONTENT_TYPE_HTML, 
+	CONTENT_TYPE_JPEG, 
+	CONTENT_TYPE_JPG, 
+	CONTENT_TYPE_CSS, 
+	CONTENT_TYPE_JS, 
+	CONTENT_TYPE_MP3, 
+	CONTENT_TYPE_PNG, 
+	CONTENT_TYPE_GIF, 
+	CONTENT_TYPE_XML,
+};
+
 /*
 ***********************************************************
 *

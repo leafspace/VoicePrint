@@ -20,6 +20,7 @@
 #define CONTENT_TYPE_GIF "image/gif"
 #define CONTENT_TYPE_XML "text/xml"
 
+#define CONTENT_TYPESIZE 11
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -27,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <strings.h>
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -34,6 +36,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "../../AllCommon/Common.h"
+
+extern char* contentTypeListReal[];
+extern char* contentTypeListDefine[];
 
 extern int addressPort;
 extern char webAddressIP[BUFFERSIZE];
