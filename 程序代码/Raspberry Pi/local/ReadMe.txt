@@ -1,11 +1,13 @@
-运行该部分程序：
+运行该部分程序：[注]：输入命令时同一条命令中不能有回车
 #!/bin/sh
-gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c SourceMain.c -o voicePrinter
-./voicePrinter
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c 
+MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c SourceMain.c -o VoicePrinter
+./VoicePrinter
 
 运行该测试程序：
 #!/bin/sh
-gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c UnitTest/TestMain.c -o UnitTest
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c 
+MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c UnitTest/TestMain.c -o UnitTest
 ./UnitTest.exe
 
 
@@ -32,3 +34,12 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng;q=0.8
 Accept-Encoding: gzip, deflate, br
 Accept-Language: zh-CN,zh;q=0.9
+
+
+通过浏览器URL启动MFC
+http://[MFC IP]/openinterface/kickapp?appid=[idName]
+
+通过浏览器设置树莓派服务器的请求参数
+http://[PI IP]/index.html?userName=admin&requestAddress=http%3A%2F%2F[MFC IP]%2Fopeninterface%2Fkickapp%3Fappid%3D[idName]
+
+[注]：http%3A%2F%2F[MFC IP]%2Fopeninterface%2Fkickapp%3Fappid%3D[idName] 为URL转义后的结果

@@ -20,7 +20,7 @@
 #define CONTENT_TYPE_GIF "image/gif"
 #define CONTENT_TYPE_XML "text/xml"
 
-#define CONTENT_TYPESIZE 11
+#define CONTENT_TYPESIZE 10
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -52,7 +52,7 @@ extern char requestWebAddress[BUFFERSIZE];
 *
 *	函数名	: doRequest
 *	功能	: 向定义的目标主机发送get请求
-*	参数	: 
+*	参数	:
 				【in】requestWay   : 用户使用的请求方式：例如GET或POST
 				【in】contentType   : 用户要请求的类型：例如text/html
 				【in】keepRecive   : 用户是否要在发送结束后继续监听返回的数据
@@ -67,7 +67,7 @@ bool doRequest(char* requestWay, char* contentType, bool keepRecive);
 *
 *	函数名	: doResponse
 *	功能	: 响应浏览器发送过来的请求
-*	参数	: 
+*	参数	:
 				【in】keepListern   : 用户是否要要在响应一次请求之后持续监听
 *	返回值	: 【ret】isSuccess : 是否成功
 *

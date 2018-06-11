@@ -4,6 +4,7 @@
 #include "AllCommon/Common.h"
 #include "ComCommon/ComCommon.h"
 #include "MainCommon/MainCommon.h"
+#include "Thread/Listener/ThreadListerner.h"
 #include "WebServer/ServerCommon/ServerCommon.h"
 
 int main()
@@ -27,7 +28,8 @@ int main()
 		}
 		else if (usefulDriveNum == 1) {
 			printf("TIP : Only have one drive .\n");
-			for (int i = 0; i < DRIVESIZE; ++i) {
+			int i = 0;
+			for (i = 0; i < DRIVESIZE; ++i) {
 				if (driveID[i] >= 0) {
 					comFId = driveID[i];
 					sprintf(dirveName, "/dev/ttyUSB%d", i);
@@ -54,6 +56,13 @@ int main()
 			printf("ERROR : Not enough memory !\n");
 		}
 
+		// 为web服务器创建一个线程
+		isSuccess = createWebListener(true);
+		if (isSuccess == false) {
+			printf("ERROR : Create web listener thread failue !\n");
+			break;
+		}
+
 		// 不停监听来自单片机的消息并处理
 		int readSize = -1;
 		printf("TIP : [LDV7] Info list . Waiting ... \n");
@@ -65,12 +74,7 @@ int main()
 					initWebAddress();
 					isSuccess = doRequest(REQUEST_GET, CONTENT_TYPE_HTML, false);
 					if (isSuccess == false) {
-						printf("ERROR : Send <get> request failue !\n");
-						break;
-					}
-					isSuccess = doResponse(true);
-					if (isSuccess == false) {
-						printf("ERROR : Response XML failue !\n");
+						printf("ERROR : Send <GET> request failue !\n");
 						break;
 					}
 				}
