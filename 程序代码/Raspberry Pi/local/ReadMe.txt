@@ -46,6 +46,6 @@ http://[PI IP]/index.html?userName=admin&requestAddress=http%3A%2F%2F[MFC IP]%2F
 
 UnitTest.exe&VoicePrinter.exe可以在MSYS64中直接运行
 
-
+查找Nginx服务器的进程号
 ps -ef|grep nginx
-kill -quit 24123
+kill -quit [id]

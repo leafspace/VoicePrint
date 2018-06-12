@@ -2,6 +2,7 @@
 #define SIGNALVALUE 1
 #define STACKSIZE 20
 #define DECODETABLE 19
+#define OVERTIME 10
 
 #include "../ServerCommon/ServerCommon.h"
 
@@ -96,3 +97,16 @@ void freeWebAddressParameter(ParameterStack *parameterStack);
 ***********************************************************
 */
 void decodingWebAddress(char *webAddress);
+
+/*
+***********************************************************
+*
+*	函数名	: socketKeepLinking
+*	功能	: 假如当客户机发来的请求为Keep-Alive时，判断socket是否还在连接中
+*	参数	:
+				【in】socket   : socket的ID
+*	返回值	: 无
+*
+***********************************************************
+*/
+bool socketKeepLinking(int socket);

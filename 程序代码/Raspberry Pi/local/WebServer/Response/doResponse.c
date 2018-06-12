@@ -293,6 +293,29 @@ void decodingWebAddress(char *webAddress)
 /*
 ***********************************************************
 *
+*	函数名	: socketKeepLinking
+*	功能	: 假如当客户机发来的请求为Keep-Alive时，判断socket是否还在连接中
+*	参数	:
+				【in】socket   : socket的ID
+*	返回值	: 无
+*
+***********************************************************
+*/
+bool socketKeepLinking(int socket)
+{
+	int info;
+    int len = sizeof(info);
+    getsockopt(socket, IPPROTO_TCP, SO_TYPE, &info, (socklen_t *) &len);
+    if (info == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/*
+***********************************************************
+*
 *	函数名	: doResponse
 *	功能	: 响应浏览器发送过来的请求
 *	参数	:
@@ -306,7 +329,7 @@ bool doResponse(bool keepListern)
 	int isSuccess = 0;
 	struct sockaddr_in server_addr;
 	char message[BUFFERSIZE] = { 0 };
-
+	struct timeval timeBegin, timeEnd;
 	// 创建服务器socket
 	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -331,13 +354,32 @@ bool doResponse(bool keepListern)
 
 	// 设置全局变量，方便后面设置
 	serverSocketId = server_socket;
+	int client_socket = 0;
+	bool isKeepLink = false;
 	do {
 		memset(message, 0, BUFFERSIZE);
-		int client_socket = accept(server_socket, NULL, NULL);
+		if (isKeepLink == true) {
+			// 如果刚刚的连接为可持续连接，则判断连接是否还连接着，如果不连接了就正常模式
+			isSuccess = socketKeepLinking(client_socket);
+			if (isSuccess == false) {
+				isKeepLink = false;
+				close(client_socket);
+				continue;
+			}
+		} else if (isKeepLink == false) {
+			// 正常不持续连接模式
+			client_socket = accept(server_socket, NULL, NULL);
+		}
+
 
 		// 读取对象发过来的报文信息
 		read(client_socket, message, BUFFERSIZE);
 		printf("TIP : Receve the request : \n%s\n", message);
+		if (strstr(message, "Connection: keep-alive") != NULL) {
+			isKeepLink = true;
+			// 开始计时
+			gettimeofday(&timeBegin, 0);
+		}
 		char contentType[BUFFERSIZE], requestPath[BUFFERSIZE];
 		resolveMessage(message, contentType, requestPath);
 
@@ -387,12 +429,21 @@ bool doResponse(bool keepListern)
 		do {
 			int readNumber = fread(message, sizeof(char), BUFFERSIZE, fp);
 			write(client_socket, message, readNumber);
-			if (strncasecmp(contentType, "text", 4) == 0) {
+			if (strncasecmp(contentType, "text", strlen("text")) == 0) {
 				printf("%s", message);
 			}
 		} while (!feof(fp));
 		printf("\n");
-		close(client_socket);
+
+		if (isKeepLink == false) {
+			close(client_socket);
+		} else {
+			gettimeofday(&timeEnd, 0);
+			if ((timeBegin.tv_sec - timeEnd.tv_sec) > OVERTIME) {
+				isKeepLink = false;
+				close(client_socket);
+			}
+		}
 	} while (keepListern);
 
 	close(server_socket);
