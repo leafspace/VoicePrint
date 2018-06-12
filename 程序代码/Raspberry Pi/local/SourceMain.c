@@ -6,6 +6,7 @@
 #include "MainCommon/MainCommon.h"
 #include "Thread/Listener/ThreadListerner.h"
 #include "WebServer/ServerCommon/ServerCommon.h"
+#include "XMLMessage/MakeXMLMessage/MakeXMLMessage.h"
 
 int main()
 {
@@ -59,7 +60,7 @@ int main()
 		// 为web服务器创建一个线程
 		isSuccess = createWebListener(true);
 		if (isSuccess == false) {
-			printf("ERROR : Create web listener thread failue !\n");
+			printf("ERROR : Create web listener thread failed !\n");
 			break;
 		}
 
@@ -71,10 +72,26 @@ int main()
 				infoBuffer[readSize] = 0;
 				printf("[LDV7] : %s", infoBuffer);
 				if (strstr(infoBuffer, "<LDV7 REG>") && strstr(infoBuffer, "</LDV7 REG>")) {
-					initWebAddress();
-					isSuccess = doRequest(REQUEST_GET, CONTENT_TYPE_HTML, false);
+					// 解析识别的识别码列表为队列的形式
+					ASRQueue asrQueue;
+					initASRQueue(&asrQueue);
+					isSuccess = SplitASRKeyWord(infoBuffer, &asrQueue);
 					if (isSuccess == false) {
-						printf("ERROR : Send <GET> request failue !\n");
+						printf("ERROR : Resolve the identifier list failed ! \n");
+						continue;
+					}
+
+					// 按照识别的识别码列表内容制作电文
+					// 存放入../web/web/xml/UserMake文件夹中
+					isSuccess = makeXMLMessage(&asrQueue);
+					if (isSuccess == false) {
+						printf("ERROR : Make message failed ! \n");
+						continue;
+					}
+
+					// 向MFC发送请求
+					isSuccess = sendRequest(REQUEST_GET, CONTENT_TYPE_HTML, false);
+					if (isSuccess == false) {
 						break;
 					}
 				}

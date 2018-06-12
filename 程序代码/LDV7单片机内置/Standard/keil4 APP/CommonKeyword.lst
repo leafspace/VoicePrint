@@ -1,0 +1,79 @@
+C51 COMPILER V9.00   COMMONKEYWORD                                                         06/12/2018 12:46:28 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE COMMONKEYWORD
+OBJECT MODULE PLACED IN ..\obj\CommonKeyword.obj
+COMPILER INVOKED BY: C:\NSProgram�\Keil\C51\BIN\C51.EXE ..\code\UserKeyword\CommonKeyword.c COMPACT BROWSE INCDIR(..\cod
+                    -e;..\user) DEBUG OBJECTEXTEND PRINT(.\CommonKeyword.lst) OBJECT(..\obj\CommonKeyword.obj)
+
+line level    source
+
+   1          #include "CommonKeyword.h"
+   2          
+   3          /*添加关键词，用户修改*/
+   4          uint8 code sRecog[DATE_ROW][DATE_CAL] = {
+   5              "huan xing",
+   6              "kai fa ban yan zheng",
+   7              "dai ma ce shi",
+   8              "kao bei",
+   9              "sao miao",
+  10              "yi",
+  11              "er",
+  12              "san",
+  13              "si",
+  14              "wu",
+  15              "liu",
+  16              "qi",
+  17              "ba",
+  18              "jiu",
+  19              "shi",
+  20              "bai",
+  21              "qian",
+  22              "wan",
+  23              "zhang",
+  24              "ye",
+  25              "ci",
+  26              "jieshu"
+  27          };
+  28          
+  29          /*添加识别码，用户修改*/
+  30          uint8 code pCode[DATE_ROW] = {
+  31              CODE_CMD,
+  32              CODE_KFBYZ,
+  33              CODE_DMCS,
+  34              CODE_COPY,
+  35              CODE_SCAN,
+  36              CODE_01,
+  37              CODE_02,
+  38              CODE_03,
+  39              CODE_04,
+  40              CODE_05,
+  41              CODE_06,
+  42              CODE_07,
+  43              CODE_08,
+  44              CODE_09,
+  45              CODE_10,
+  46              CODE_BAI,
+  47              CODE_QIAN,
+  48              CODE_WAN,
+  49              CODE_ZHANG,
+  50              CODE_YE,
+  51              CODE_CI,
+  52              CODE_jieshu,
+  53          };
+
+C51 COMPILER V9.00   COMMONKEYWORD                                                         06/12/2018 12:46:28 PAGE 2   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =    462    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

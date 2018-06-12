@@ -1,13 +1,12 @@
 运行该部分程序：[注]：输入命令时同一条命令中不能有回车
 #!/bin/sh
-gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c 
-MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c SourceMain.c -o VoicePrinter
+gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c -lpthread XMLMessage/ASRQueue/ASRQueue.c XMLMessage/MakeXMLMessage/MakeXMLMessage.c SourceMain.c -o VoicePrinter
 ./VoicePrinter
 
 运行该测试程序：
 #!/bin/sh
 gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/ServerCommon/ServerCommon.c 
-MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c UnitTest/TestMain.c -o UnitTest
+MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c XMLMessage/ASRQueue/ASRQueue.c XMLMessage/MakeXMLMessage/MakeXMLMessage.c UnitTest/TestMain.c -o UnitTest
 ./UnitTest.exe
 
 
@@ -43,3 +42,10 @@ http://[MFC IP]/openinterface/kickapp?appid=[idName]
 http://[PI IP]/index.html?userName=admin&requestAddress=http%3A%2F%2F[MFC IP]%2Fopeninterface%2Fkickapp%3Fappid%3D[idName]
 
 [注]：http%3A%2F%2F[MFC IP]%2Fopeninterface%2Fkickapp%3Fappid%3D[idName] 为URL转义后的结果
+
+
+UnitTest.exe&VoicePrinter.exe可以在MSYS64中直接运行
+
+
+ps -ef|grep nginx
+kill -quit 24123

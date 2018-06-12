@@ -25,7 +25,7 @@ void resolveMessage(char* message, char* contentType, char* requestPath)
 	strcpy(contentType, CONTENT_TYPE_HTML);
 	strcpy(requestPath, "../web/web/index.html");
 
-	int i = 0;
+	int i = 0, j = 0;
 	char *requestPathBeginPosition = NULL, *requestPathEndPosition = NULL;
 	// 获取客户端请求的文件路径
 	if ((requestPathBeginPosition = strstr(message, "GET")) == NULL) {
@@ -72,7 +72,12 @@ void resolveMessage(char* message, char* contentType, char* requestPath)
 		fileContentType[i] = 0;
 
 		for (i = 0; i < CONTENT_TYPESIZE; ++i) {
-			if (strcmp(strupr(fileContentType), contentTypeListReal[i]) == 0) {
+			for (j = 0; j < strlen(fileContentType); ++j) {
+				if (fileContentType[j] >= 'a' && fileContentType[j] <= 'z') {
+					fileContentType[j] = fileContentType[j] - 32;
+				}
+			}
+			if (strcmp(fileContentType, contentTypeListReal[i]) == 0) {
 				strcpy(contentType, contentTypeListDefine[i]);
 				break;
 			}
@@ -363,7 +368,7 @@ bool doResponse(bool keepListern)
 
 			}
 			else {
-				strcpy(message, "<html><head></head><body><h3>Set Parameter Failue !</h3><br/>");
+				strcpy(message, "<html><head></head><body><h3>Set Parameter failed !</h3><br/>");
 				sprintf(message, "%s<a href='index.html'>Back index</a></body></html>\r\n\r\n", message);
 			}
 			write(client_socket, message, strlen(message));

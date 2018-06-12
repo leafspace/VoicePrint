@@ -94,7 +94,7 @@ void PrintComReg(void)
 		sprintf(temp, "%d", commondQueue.commondQueue[i]);                  // 将数据格式化
 		strcat(buffer, temp);
 		if ((i + 1) != commondQueue.queueLength) {
-			strcat(buffer, "\t");
+			strcat(buffer, " ");
 		}
 	}
 	commondQueue.queueLength = 0;                                           // 清空识别队列

@@ -1,0 +1,119 @@
+C51 COMPILER V9.00   SOURCEMAIN                                                            06/12/2018 12:46:43 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE SOURCEMAIN
+OBJECT MODULE PLACED IN ..\obj\SourceMain.obj
+COMPILER INVOKED BY: C:\NSProgram�\Keil\C51\BIN\C51.EXE ..\code\SourceMain.c COMPACT BROWSE INCDIR(..\code;..\user) DEBU
+                    -G OBJECTEXTEND PRINT(.\SourceMain.lst) OBJECT(..\obj\SourceMain.obj)
+
+line level    source
+
+   1          /***************************飞音云电子****************************
+   2          **  工程名称：YS-V0.7语音识别模块驱动程序
+   3          **      CPU: STC11L08XE
+   4          **      晶振：22.1184MHZ
+   5          **      波特率：9600 bit/S
+   6          **      配套产品信息：YS-V0.7语音识别开发板
+   7          **                http://yuesheng001.taobao.com
+   8          **  作者：zdings
+   9          **  联系：751956552@qq.com
+  10          **  修改日期：2013.9.13
+  11          **  说明：口令模式+IO控制： 即每次识别时都需要说"小杰"这个口令 ，才能够进�
+             -�下一级的识别
+  12          /***************************飞音云电子******************************/
+  13          
+  14          /************************************************************************************/
+  15          //      nAsrStatus 用来在main主程序中表示程序运行的状态，不是LD3320芯片内部的状态寄�
+             -��器
+  16          //      LD_ASR_NONE:            表示没有在作ASR识别
+  17          //      LD_ASR_RUNING：                表示LD3320正在作ASR识别中
+  18          //      LD_ASR_FOUNDOK:         表示一次识别流程结束后，有一个识别结果
+  19          //      LD_ASR_FOUNDZERO:       表示一次识别流程结束后，没有识别结果
+  20          //      LD_ASR_ERROR:           表示一次识别流程中LD3320芯片内部出现不正确的状态
+  21          /***********************************************************************************/
+  22          #include "config.h"
+  23          uint8 idata nAsrStatus = 0;
+  24          
+  25          /***********************************************************
+  26          * 名    称： void  main(void)
+  27          * 功    能： 主函数       程序入口
+  28          * 入口参数：
+  29          * 出口参数：
+  30          * 说    明：
+  31          * 调用方法：
+  32          **********************************************************/
+  33          void  main(void)
+  34          {
+  35   1              uint8 idata nAsrRes;
+  36   1              uint8 i = 0;
+  37   1              Led_test();
+  38   1              MCU_init();
+  39   1              LD_Reset();
+  40   1              UartIni();                                                               /* 串口初始化 */
+  41   1              nAsrStatus = LD_ASR_NONE;                                                // 初始状态：没有在作AS
+             -R
+  42   1      
+  43   1              // 初始化全局识别命令词队列
+  44   1              commondQueue.queueLength = 0;
+  45   1      
+  46   1              MainMenu();
+  47   1      
+  48   1              while (1)
+  49   1              {
+  50   2                      switch (nAsrStatus)
+  51   2                      {
+C51 COMPILER V9.00   SOURCEMAIN                                                            06/12/2018 12:46:43 PAGE 2   
+
+  52   3                      case LD_ASR_RUNING:
+  53   3                              break;
+  54   3                      case LD_ASR_ERROR:
+  55   3                      {
+  56   4                              PrintCom("ERROR : System error ! \r\n");
+  57   4                              PrintCom("ERROR : If you have been in this state, check the hardware error in [FUN] RunASR . \r\n");
+  58   4                              nAsrStatus = LD_ASR_NONE;
+  59   4                              break;
+  60   4                      }
+  61   3                      case LD_ASR_NONE:
+  62   3                      {
+  63   4                              nAsrStatus = LD_ASR_RUNING;
+  64   4                              if (RunASR() == 0)                                              /* 启动一次ASR识别流程：ASR初
+             -始化，ASR添加关键词语，启动ASR运算 */
+  65   4                              {
+  66   5                                      PrintCom("ERROR : RunASR failue ! \r\n");
+  67   5                                      nAsrStatus = LD_ASR_ERROR;
+  68   5                              }
+  69   4                              break;
+  70   4                      }
+  71   3                      case LD_ASR_FOUNDOK:                                                /* 一次ASR识别流程结束，去
+             -取ASR识别结果 */
+  72   3                      {
+  73   4                              PrintCom("TIP : ASR finish ! Find result ! \r\n");
+  74   4                              nAsrRes = LD_GetResult();                                       /* 获取结果 */
+  75   4                              User_handle(nAsrRes);                                           // 用户执行函数
+  76   4                              nAsrStatus = LD_ASR_NONE;
+  77   4                              break;
+  78   4                      }
+  79   3                      case LD_ASR_FOUNDZERO:
+  80   3                      default:
+  81   3                      {
+  82   4                              PrintCom("TIP : Can't find result ! \r\n");
+  83   4                              nAsrStatus = LD_ASR_NONE;
+  84   4                              break;
+  85   4                      }
+  86   3                      }
+  87   2              }
+  88   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    127    ----
+   CONSTANT SIZE    =    204    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----       1
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =      1       1
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
