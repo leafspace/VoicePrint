@@ -13,19 +13,19 @@
 */
 bool makeXMLMessage(ASRQueue *queue)
 {
-    int keyNum = 0;
-    printf("TIP : ASR reconation value list : \n");
-    while(queue->asrQueueLen > 0) {
-        popASRQueue(queue, &keyNum);
-        switch(keyNum)
-        {
-            case CODE_COPY : system("cp ../web/web/xml/iocopy/IoCopy.xml ../web/web/xml/UserMake/define.xml"); break;
-            case CODE_SCAN : system("cp ../web/web/xml/ioscan/scan2media/scan.xml ../web/web/xml/UserMake/define.xml"); break;
-            default : break;
-        }
-        printf("%d\t", keyNum);
-    }
-    printf("\n");
-    printf("TIP : Make message file OK ! \n");
-    return true;
+	int keyNum = 0;
+	printf("TIP : ASR reconation value list : \n");
+	while (queue->asrQueueLen > 0) {
+		popASRQueue(queue, &keyNum);
+		switch (keyNum)
+		{
+		case CODE_COPY: system("cp ../web/web/xml/iocopy/IoCopy.xml ../web/web/xml/UserMake/define.xml"); break;
+		case CODE_SCAN: system("cp ../web/web/xml/ioscan/scan2media/scan.xml ../web/web/xml/UserMake/define.xml"); break;
+		default: break;
+		}
+		printf("%d\t", keyNum);
+	}
+	printf("\n");
+	printf("TIP : Make message file OK ! \n");
+	return true;
 }

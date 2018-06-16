@@ -154,7 +154,8 @@ bool SplitASRKeyWord(char* message, ASRQueue *queue)
 		if (*(keyWordBeginPosition + i) == ' ') {
 			pushASRQueue(queue, keyNum);
 			keyNum = 0;
-		} else {
+		}
+		else {
 			keyNum = keyNum * 10 + *(keyWordBeginPosition + i) - '0';
 		}
 	}

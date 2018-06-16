@@ -13,9 +13,9 @@
 */
 void initASRQueue(ASRQueue *queue)
 {
-    queue->head = 0;
-    queue->tail = 0;
-    queue->asrQueueLen = 0;
+	queue->head = 0;
+	queue->tail = 0;
+	queue->asrQueueLen = 0;
 }
 
 /*
@@ -32,14 +32,15 @@ void initASRQueue(ASRQueue *queue)
 */
 bool pushASRQueue(ASRQueue *queue, int value)
 {
-    if (queue->asrQueueLen == QUEUESIZE) {
-        return false;
-    } else {
-        queue->asrQueue[(queue->tail + 1) % QUEUESIZE] = value;
-        queue->tail = (queue->tail + 1) % QUEUESIZE;
-        queue->asrQueueLen++;
-        return true;
-    }
+	if (queue->asrQueueLen == QUEUESIZE) {
+		return false;
+	}
+	else {
+		queue->asrQueue[(queue->tail + 1) % QUEUESIZE] = value;
+		queue->tail = (queue->tail + 1) % QUEUESIZE;
+		queue->asrQueueLen++;
+		return true;
+	}
 }
 
 /*
@@ -56,12 +57,13 @@ bool pushASRQueue(ASRQueue *queue, int value)
 */
 bool popASRQueue(ASRQueue *queue, int *retValue)
 {
-    if (queue->asrQueueLen == 0) {
-        return false;
-    } else {
-        (*retValue) = queue->asrQueue[(queue->head + 1) % QUEUESIZE];
-        queue->head = (queue->head + 1) % QUEUESIZE;
-        queue->asrQueueLen--;
-        return true;
-    }
+	if (queue->asrQueueLen == 0) {
+		return false;
+	}
+	else {
+		(*retValue) = queue->asrQueue[(queue->head + 1) % QUEUESIZE];
+		queue->head = (queue->head + 1) % QUEUESIZE;
+		queue->asrQueueLen--;
+		return true;
+	}
 }

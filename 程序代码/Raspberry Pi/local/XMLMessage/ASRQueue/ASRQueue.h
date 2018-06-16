@@ -5,9 +5,9 @@
 
 typedef struct ASRQueue
 {
-    int asrQueue[QUEUESIZE];
-    int head, tail;
-    int asrQueueLen;
+	int asrQueue[QUEUESIZE];
+	int head, tail;
+	int asrQueueLen;
 } ASRQueue;
 
 /*

@@ -57,7 +57,7 @@ void resolveParameter(char* message, ParameterStack *parameterStack);
 *
 ***********************************************************
 */
-void makeMessageHead(char* contentType, char* message);
+void makeMessageHead(char* contentType, bool isKeepLink, char* message);
 
 /*
 ***********************************************************
@@ -97,16 +97,3 @@ void freeWebAddressParameter(ParameterStack *parameterStack);
 ***********************************************************
 */
 void decodingWebAddress(char *webAddress);
-
-/*
-***********************************************************
-*
-*	函数名	: socketKeepLinking
-*	功能	: 假如当客户机发来的请求为Keep-Alive时，判断socket是否还在连接中
-*	参数	:
-				【in】socket   : socket的ID
-*	返回值	: 无
-*
-***********************************************************
-*/
-bool socketKeepLinking(int socket);

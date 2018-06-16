@@ -23,7 +23,7 @@ int webAddressDecodeTable[2][DECODETABLE] = {
 void resolveMessage(char* message, char* contentType, char* requestPath)
 {
 	strcpy(contentType, CONTENT_TYPE_HTML);
-	strcpy(requestPath, "../web/web/index.html");
+	strcpy(requestPath, "/index.html");
 
 	int i = 0, j = 0;
 	char *requestPathBeginPosition = NULL, *requestPathEndPosition = NULL;
@@ -178,11 +178,14 @@ void resolveParameter(char* message, ParameterStack *parameterStack)
 *
 ***********************************************************
 */
-void makeMessageHead(char* contentType, char* message)
+void makeMessageHead(char* contentType, bool isKeepLink, char* message)
 {
 	// 制作报文信息
 	strcat(message, "HTTP/1.0 200 OK\r\n");
 	strcat(message, "Server: DWBServer\r\n");
+	if (isKeepLink == true) {
+		strcat(message, "Connection: Keep-Alive\r\n");
+	}
 	sprintf(message, "%sContent-Type: %s;charset=utf-8\r\n\r\n", message, contentType);
 }
 
@@ -293,29 +296,6 @@ void decodingWebAddress(char *webAddress)
 /*
 ***********************************************************
 *
-*	函数名	: socketKeepLinking
-*	功能	: 假如当客户机发来的请求为Keep-Alive时，判断socket是否还在连接中
-*	参数	:
-				【in】socket   : socket的ID
-*	返回值	: 无
-*
-***********************************************************
-*/
-bool socketKeepLinking(int socket)
-{
-	int info;
-    int len = sizeof(info);
-    getsockopt(socket, IPPROTO_TCP, SO_TYPE, &info, (socklen_t *) &len);
-    if (info == 1) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/*
-***********************************************************
-*
 *	函数名	: doResponse
 *	功能	: 响应浏览器发送过来的请求
 *	参数	:
@@ -358,27 +338,29 @@ bool doResponse(bool keepListern)
 	bool isKeepLink = false;
 	do {
 		memset(message, 0, BUFFERSIZE);
-		if (isKeepLink == true) {
-			// 如果刚刚的连接为可持续连接，则判断连接是否还连接着，如果不连接了就正常模式
-			isSuccess = socketKeepLinking(client_socket);
-			if (isSuccess == false) {
-				isKeepLink = false;
-				close(client_socket);
-				continue;
-			}
-		} else if (isKeepLink == false) {
+
+		if (isKeepLink == false) {
 			// 正常不持续连接模式
+			printf("TIP : Wating link ... \n");
 			client_socket = accept(server_socket, NULL, NULL);
+			printf("TIP : You have a new Link ! \n");
+		}
+		else {
+			printf("TIP : This is keep alive ... \n");
 		}
 
-
 		// 读取对象发过来的报文信息
-		read(client_socket, message, BUFFERSIZE);
+		printf("TIP : Reading ... \n");
+		int size = read(client_socket, message, BUFFERSIZE);
 		printf("TIP : Receve the request : \n%s\n", message);
-		if (strstr(message, "Connection: keep-alive") != NULL) {
+		//if (strstr(message, "Connection: Keep-Alive") != NULL) {
+		if (strstr(message, "Connection: ") != NULL) {
 			isKeepLink = true;
-			// 开始计时
 			gettimeofday(&timeBegin, 0);
+			printf("TIP : This is a Keep-Alive Link ! \n");
+		}
+		else {
+			isKeepLink = false;
 		}
 		char contentType[BUFFERSIZE], requestPath[BUFFERSIZE];
 		resolveMessage(message, contentType, requestPath);
@@ -391,10 +373,10 @@ bool doResponse(bool keepListern)
 		// 制作将要返回的电文头信息
 		memset(message, 0, BUFFERSIZE);
 		if (parameterStack.parameterLen != 0) {
-			makeMessageHead(CONTENT_TYPE_HTML, message);
+			makeMessageHead(CONTENT_TYPE_HTML, isKeepLink, message);
 		}
 		else {
-			makeMessageHead(contentType, message);
+			makeMessageHead(contentType, isKeepLink, message);
 		}
 		write(client_socket, message, strlen(message));
 		printf("%s\n", message);
@@ -426,6 +408,7 @@ bool doResponse(bool keepListern)
 			continue;
 		}
 
+		printf("TIP : Send file data ... \n");
 		do {
 			int readNumber = fread(message, sizeof(char), BUFFERSIZE, fp);
 			write(client_socket, message, readNumber);
@@ -434,12 +417,17 @@ bool doResponse(bool keepListern)
 			}
 		} while (!feof(fp));
 		printf("\n");
+		printf("TIP : Send file data over ! \n");
 
 		if (isKeepLink == false) {
 			close(client_socket);
-		} else {
+		}
+		else {
+			printf("TIP : Over time check ... \n");
 			gettimeofday(&timeEnd, 0);
-			if ((timeBegin.tv_sec - timeEnd.tv_sec) > OVERTIME) {
+			printf("TIP : Over time %ds . \n", (timeEnd.tv_sec - timeBegin.tv_sec));
+			if ((timeEnd.tv_sec - timeBegin.tv_sec) > OVERTIME) {
+				printf("TIP : Over time ! Finish link ! \n");
 				isKeepLink = false;
 				close(client_socket);
 			}
