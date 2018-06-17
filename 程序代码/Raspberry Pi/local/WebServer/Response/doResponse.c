@@ -10,6 +10,69 @@ int webAddressDecodeTable[2][DECODETABLE] = {
 /*
 ***********************************************************
 *
+*	函数名	: initSocketLink
+*	功能	: 解析对象请求的报文
+*	参数	:
+				【out】server_socket   : 创建的socket_server id
+*	返回值	: 【ret】 : 返回是否成功
+*
+***********************************************************
+*/
+bool initSocketLink(int *server_socket)
+{
+	struct sockaddr_in server_addr;
+	// 创建服务器socket
+	*server_socket = socket(AF_INET, SOCK_STREAM, 0);
+
+	// 创建服务器ip结构
+	memset(&server_addr, 0, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	server_addr.sin_port = htons(addressPort);
+
+	// 绑定服务器socket与ip结构
+	bool isSuccess = bind(*server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr));
+	if (isSuccess == false) {
+		printf("ERROR : Server bind ip socket failure ! \n");
+		return false;
+	}
+
+	// 开始监听socket
+	if (listen(*server_socket, SIGNALVALUE) != 0) {
+		printf("ERROR : Listen socket failure ! \n");
+		return false;
+	}
+
+	return true;
+}
+
+/*
+***********************************************************
+*
+*	函数名	: checkMessageUseful
+*	功能	: 检查是否是一个正常的报文
+*	参数	:
+				【in】message   : 客户端请求的报文
+*	返回值	: 【ret】 isSuccess: 返回是否成功
+*
+***********************************************************
+*/
+bool checkMessageUseful(char *message)
+{
+	if (strstr(message, REQUEST_GET) == NULL && strstr(message, REQUEST_GET) == NULL) {
+		return false;
+	}
+
+	if (strstr(message, "HTTP") == NULL) {
+		return false;
+	}
+
+	return true;
+}
+
+/*
+***********************************************************
+*
 *	函数名	: resolveMessage
 *	功能	: 解析对象请求的报文
 *	参数	:
@@ -58,7 +121,18 @@ void resolveMessage(char* message, char* contentType, char* requestPath)
 		tempBeginPosition = fileContentType;
 
 		// 开始获取该文件类型
-		tempBeginPosition = strstr(tempBeginPosition, ".") + 1;
+		if ((tempBeginPosition = strstr(tempBeginPosition, ".")) == NULL) {
+			if (tempBeginPosition[strlen(tempBeginPosition)] == '/') {
+				strcat(tempBeginPosition, "index.html");
+			}
+			else {
+				strcpy(tempBeginPosition, "/index.html");
+			}
+		}
+		else {
+			tempBeginPosition = tempBeginPosition + 1;
+		}
+
 		if ((tempEndPosition = strstr(tempBeginPosition, "?")) == NULL) {
 			tempEndPosition = tempBeginPosition + strlen(tempBeginPosition);
 		}
@@ -296,6 +370,74 @@ void decodingWebAddress(char *webAddress)
 /*
 ***********************************************************
 *
+*	函数名	: handleWebAddressParameter
+*	功能	: 清除参数内存
+*	参数	:
+				【in】parameterStack   : 用户报文的参数队列
+				【out】messgae   : 处理后的消息
+*	返回值	: 无
+*
+***********************************************************
+*/
+void handleWebAddressParameter(ParameterStack *parameterStack, char *message)
+{
+	bool isSuccess = setWebAddressParameter(parameterStack);
+	freeWebAddressParameter(parameterStack);
+	decodingWebAddress(requestWebAddress);
+	if (isSuccess == true) {
+		strcpy(message, "<html><head></head><body><h3>Set Parameter Success !</h3><br/>");
+		sprintf(message, "%s<h3>You set MFC Request Address = [%s]</h3><br/>", message, requestWebAddress);
+		sprintf(message, "%s<a href='index.html'>Back index</a></body></html>\r\n\r\n", message);
+
+	}
+	else {
+		strcpy(message, "<html><head></head><body><h3>Set Parameter failed !</h3><br/>");
+		sprintf(message, "%s<a href='index.html'>Back index</a></body></html>\r\n\r\n", message);
+	}
+}
+
+/*
+***********************************************************
+*
+*	函数名	: responseFileData
+*	功能	: 响应发送的请求文件
+*	参数	:
+				【in】requestPath   : 用户报文的参数队列
+				【in】messgae   : 处理后的消息
+				【in】client_socket   : 客户端的socket
+				【in】contentType   : 处理后的消息
+*	返回值	: 【ret】 isSuccess: 返回是否成功
+*
+***********************************************************
+*/
+bool responseFileData(char *requestPath, char *message, int client_socket, char *contentType)
+{
+	FILE *fp = fopen(requestPath, "rb");
+	if (fp == NULL) {
+		printf("ERROR : [%s] Can't find this file ! \n", requestPath);
+		return false;
+	}
+
+	printf("TIP : Send file data ... \n");
+	do {
+		memset(message, 0, BUFFERSIZE);
+		int readNumber = fread(message, sizeof(char), BUFFERSIZE, fp);
+		write(client_socket, message, readNumber);
+		if (strncasecmp(contentType, "text", strlen("text")) == 0 ||
+			strncasecmp(contentType, "application/x-javascript", strlen("application/x-javascript")) == 0) {
+			printf("%s", message);
+		}
+	} while (!feof(fp));
+	fclose(fp);
+	printf("\n");
+	printf("TIP : Send file data over ! \n");
+
+	return true;
+}
+
+/*
+***********************************************************
+*
 *	函数名	: doResponse
 *	功能	: 响应浏览器发送过来的请求
 *	参数	:
@@ -307,61 +449,43 @@ void decodingWebAddress(char *webAddress)
 bool doResponse(bool keepListern)
 {
 	int isSuccess = 0;
-	struct sockaddr_in server_addr;
+	int server_socket = 0;
+	bool isKeepAlive = false;
 	char message[BUFFERSIZE] = { 0 };
-	struct timeval timeBegin, timeEnd;
-	// 创建服务器socket
-	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
-
-	// 创建服务器ip结构
-	memset(&server_addr, 0, sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	server_addr.sin_port = htons(addressPort);
-
-	// 绑定服务器socket与ip结构
-	isSuccess = bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr));
+	// 初始化socket的一些数据
+	isSuccess = initSocketLink(&server_socket);
 	if (isSuccess == false) {
-		printf("ERROR : Server bind ip socket failure ! \n");
 		return false;
 	}
 
-	// 开始监听socket
-	if (listen(server_socket, SIGNALVALUE) != 0) {
-		printf("ERROR : Listen socket failure ! \n");
-		return false;
-	}
-
-	// 设置全局变量，方便后面设置
+	// 设置全局变量，方便后面关闭线程时保守
 	serverSocketId = server_socket;
-	int client_socket = 0;
-	bool isKeepLink = false;
 	do {
-		memset(message, 0, BUFFERSIZE);
-
-		if (isKeepLink == false) {
-			// 正常不持续连接模式
-			printf("TIP : Wating link ... \n");
-			client_socket = accept(server_socket, NULL, NULL);
-			printf("TIP : You have a new Link ! \n");
-		}
-		else {
-			printf("TIP : This is keep alive ... \n");
-		}
+		printf("============================================= \n");
+		printf("TIP : Wating link ... \n");
+		int client_socket = accept(server_socket, NULL, NULL);
+		printf("TIP : You have a new Link ! \n");
 
 		// 读取对象发过来的报文信息
 		printf("TIP : Reading ... \n");
+		memset(message, 0, BUFFERSIZE);
 		int size = read(client_socket, message, BUFFERSIZE);
 		printf("TIP : Receve the request : \n%s\n", message);
-		//if (strstr(message, "Connection: Keep-Alive") != NULL) {
-		if (strstr(message, "Connection: ") != NULL) {
-			isKeepLink = true;
-			gettimeofday(&timeBegin, 0);
-			printf("TIP : This is a Keep-Alive Link ! \n");
+
+		if (checkMessageUseful(message) == false) {
+			printf("ERROR : This not a usefule message ! \n");
+			continue;
+		}
+
+		// 如果当前为Keep-Alive模式
+		if (strncasecmp(strstr(message, "Connection"), "Connection: Keep-Alive",
+			strlen("Connection: Keep-Alive")) == 0) {
+			isKeepAlive = true;
 		}
 		else {
-			isKeepLink = false;
+			isKeepAlive = false;
 		}
+
 		char contentType[BUFFERSIZE], requestPath[BUFFERSIZE];
 		resolveMessage(message, contentType, requestPath);
 
@@ -373,28 +497,16 @@ bool doResponse(bool keepListern)
 		// 制作将要返回的电文头信息
 		memset(message, 0, BUFFERSIZE);
 		if (parameterStack.parameterLen != 0) {
-			makeMessageHead(CONTENT_TYPE_HTML, isKeepLink, message);
+			makeMessageHead(CONTENT_TYPE_HTML, false, message);
 		}
 		else {
-			makeMessageHead(contentType, isKeepLink, message);
+			makeMessageHead(contentType, false, message);
 		}
 		write(client_socket, message, strlen(message));
 		printf("%s\n", message);
 
 		if (parameterStack.parameterLen != 0) {
-			bool isSuccess = setWebAddressParameter(&parameterStack);
-			freeWebAddressParameter(&parameterStack);
-			decodingWebAddress(requestWebAddress);
-			if (isSuccess == true) {
-				strcpy(message, "<html><head></head><body><h3>Set Parameter Success !</h3><br/>");
-				sprintf(message, "%s<h3>You set MFC Request Address = [%s]</h3><br/>", message, requestWebAddress);
-				sprintf(message, "%s<a href='index.html'>Back index</a></body></html>\r\n\r\n", message);
-
-			}
-			else {
-				strcpy(message, "<html><head></head><body><h3>Set Parameter failed !</h3><br/>");
-				sprintf(message, "%s<a href='index.html'>Back index</a></body></html>\r\n\r\n", message);
-			}
+			handleWebAddressParameter(&parameterStack, message);
 			write(client_socket, message, strlen(message));
 			printf("%s\n", message);
 			close(client_socket);
@@ -402,36 +514,37 @@ bool doResponse(bool keepListern)
 		}
 
 		// 发送请求的path地址的数据
-		FILE *fp = fopen(requestPath, "rb");
-		if (fp == NULL) {
-			printf("ERROR : [%s] Can't find this file ! \n", requestPath);
+		isSuccess = responseFileData(requestPath, message, client_socket, contentType);
+		if (isSuccess == false) {
 			continue;
 		}
 
-		printf("TIP : Send file data ... \n");
-		do {
-			int readNumber = fread(message, sizeof(char), BUFFERSIZE, fp);
-			write(client_socket, message, readNumber);
-			if (strncasecmp(contentType, "text", strlen("text")) == 0) {
-				printf("%s", message);
-			}
-		} while (!feof(fp));
-		printf("\n");
-		printf("TIP : Send file data over ! \n");
+		
+		if (isKeepAlive == true) {
+			printf("TIP : This is a Keep-Alive Link ! \n");
+			struct timeval timeBegin, timeEnd;
+			createKeepAliveThread(client_socket);
+			gettimeofday(&timeBegin, 0);
+			while (true) {
+				if (checkIsOver() == false) {
+					printf("TIP : Keep Alive Thread is Over ! \n");
+					break;
+				}
 
-		if (isKeepLink == false) {
-			close(client_socket);
-		}
-		else {
-			printf("TIP : Over time check ... \n");
-			gettimeofday(&timeEnd, 0);
-			printf("TIP : Over time %ds . \n", (timeEnd.tv_sec - timeBegin.tv_sec));
-			if ((timeEnd.tv_sec - timeBegin.tv_sec) > OVERTIME) {
-				printf("TIP : Over time ! Finish link ! \n");
-				isKeepLink = false;
-				close(client_socket);
+				// 超时检测
+				gettimeofday(&timeEnd, 0);
+				if ((timeEnd.tv_sec - timeBegin.tv_sec) > OVERTIME) {
+					printf("TIP : Over time %ds . \n", (timeEnd.tv_sec - timeBegin.tv_sec));
+					printf("TIP : Over time ! Finish link ! \n");
+					cancelKeepAliveThread(client_socket);
+					break;
+				}
 			}
+			close(client_socket);
+			continue;
 		}
+
+		close(client_socket);
 	} while (keepListern);
 
 	close(server_socket);

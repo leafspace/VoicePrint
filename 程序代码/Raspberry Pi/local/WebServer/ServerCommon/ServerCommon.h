@@ -36,6 +36,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "../../AllCommon/Common.h"
+#include "../../Thread/KeepAlive/KeepAliveThread.h"
 
 extern char* contentTypeListReal[];
 extern char* contentTypeListDefine[];
@@ -74,6 +75,19 @@ bool doRequest(char* requestWay, char* contentType, bool keepRecive);
 ***********************************************************
 */
 bool doResponse(bool keepListern);
+
+/*
+***********************************************************
+*
+*	函数名	: doKeepAlive
+*	功能	: 启动Keep-Alive模式的监听
+*	参数	:
+				【in】client_socket   : 用于传输的客户端socket号
+*	返回值	: 【ret】isSuccess : 是否成功
+*
+***********************************************************
+*/
+bool doKeepAlive(int client_socket);
 
 /*
 ***********************************************************

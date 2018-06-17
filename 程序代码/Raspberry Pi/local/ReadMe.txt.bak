@@ -2,14 +2,14 @@
 #!/bin/sh
 gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/Response/doKeepAlive.c 
 WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c Thread/KeepAlive/KeepAliveThread.c XMLMessage/ASRQueue/ASRQueue.c 
-XMLMessage/MakeXMLMessage/MakeXMLMessage.c UnitTest/TestMain.c -lpthread -o VoicePrinter
+XMLMessage/MakeXMLMessage/MakeXMLMessage.c UnitTest/TestMain.c -o VoicePrinter
 ./VoicePrinter
 
 运行该测试程序：
 #!/bin/sh
 gcc ComCommon/ComCommon.c UserKeyword/CommonKeyword.c WebServer/Request/doRequest.c WebServer/Response/doResponse.c WebServer/Response/doKeepAlive.c 
 WebServer/ServerCommon/ServerCommon.c MainCommon/MainCommon.c Thread/Listener/ThreadListerner.c Thread/KeepAlive/KeepAliveThread.c XMLMessage/ASRQueue/ASRQueue.c 
-XMLMessage/MakeXMLMessage/MakeXMLMessage.c UnitTest/TestMain.c -lpthread -o UnitTest
+XMLMessage/MakeXMLMessage/MakeXMLMessage.c UnitTest/TestMain.c -o UnitTest
 ./UnitTest.exe
 
 
